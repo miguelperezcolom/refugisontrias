@@ -8,6 +8,7 @@
   <modules>
     <module>web</module>
     <module>model</module>
+    <module>backoffice</module>
   </modules>
   <name>refugisontrias Maven Webapp</name>
   <url>http://maven.apache.org</url>
