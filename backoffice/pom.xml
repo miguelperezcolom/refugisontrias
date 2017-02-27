@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>all</artifactId>
-        <groupId>io.mateu.refugisontrias</groupId>
+        <artifactId>parent</artifactId>
+        <groupId>io.mateu.ui</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.mateu.refugisontrias</groupId>
     <artifactId>backoffice</artifactId>
-    <packaging>jar</packaging>
+    <packaging>${packaging.type}</packaging>
 
     <name>backoffice</name>
     <url>http://maven.apache.org</url>
@@ -25,5 +25,20 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.mateu.refugisontrias</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mateu.ui</groupId>
+            <artifactId>mdd</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>

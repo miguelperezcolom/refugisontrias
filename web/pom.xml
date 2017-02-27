@@ -9,7 +9,7 @@
     <groupId>io.mateu.refugisontrias</groupId>
     <artifactId>web</artifactId>
     <packaging>war</packaging>
-    <name>web Maven Webapp</name>
+    <name>web</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

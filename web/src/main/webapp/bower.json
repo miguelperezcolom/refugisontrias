@@ -13,6 +13,7 @@
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "platinum-elements": "PolymerElements/platinum-elements#^2.0.0",
     "app-layout": "PolymerElements/app-layout#^0.10.6",
-    "vaadin-core-elements": "^1.4.0"
+    "vaadin-core-elements": "^1.4.0",
+    "vaadin-grid": "^1.2.1"
   }
 }

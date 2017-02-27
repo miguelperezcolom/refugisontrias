@@ -10,7 +10,7 @@
     <module>model</module>
     <module>backoffice</module>
   </modules>
-  <name>refugisontrias Maven Webapp</name>
+  <name>all</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -35,6 +35,28 @@
 
   </build>
 
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>mateu-central</id>
+      <url>http://nexus.mateu.io/repository/mateu-central/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>mateu-central</id>
+      <url>http://nexus.mateu.io/repository/mateu-central/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>mateu-central</id>
+      <url>http://nexus.mateu.io/repository/mateu-central</url>
+    </repository>
+  </repositories>
 
 
 </project>
