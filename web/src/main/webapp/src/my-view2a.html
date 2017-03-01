@@ -1,0 +1,183 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="boton.html">
+
+<dom-module id="my-view2">
+  <template>
+    <style include="shared-styles boton">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+    </style>
+
+    <div class="card">
+      <div class="circle">2</div>
+      <h1>View Two</h1>
+
+      <paper-input name="name" label="Name" requiredx value="{{data.nombre}}"></paper-input>
+
+
+
+      <vaadin-grid selection-mode="single" id="g"
+      >
+        <style>
+          .ok {
+            color: green;
+            width: 70px;
+            height: 70px;
+          }
+
+          .ko {
+            color: red;
+            width: 70px;
+            height: 70px;
+          }
+
+          .cent {
+            text-align: center;
+          }
+
+        </style>
+        <table>
+          <!-- Define the columns and their mapping to data properties. -->
+          <col name="day">
+          <col name="enough">
+
+          <!-- Define the column headings. -->
+          <thead>
+          <tr>
+            <th>Day</th>
+            <th></th>
+          </tr>
+          </thead>
+        </table>
+      </vaadin-grid>
+
+      <br/>
+
+      <boton responsive><input type="button" on-click="_submit" value="Place Order"></boton>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view2',
+
+        properties: {
+            user: Object,
+            data: {
+                type: Object,
+                notify: true,
+            },
+
+
+        },
+
+        _submit: function(e) {
+            var grid = this.$.g;
+
+            if (grid.items[grid.selection.selected[0]].enough) {
+              console.log('ok')
+            } else {
+                console.log('ko')
+                g
+            }
+
+        },
+
+        attached: function() {
+
+            this.async(function() {
+                // access sibling or parent elements here
+
+                var grid = this.$.g;
+
+                var progressRenderer = function(cell) {
+                    cell.element.innerHTML = (cell.data)?'<iron-icon class="ok cent" icon="icons:check-circle"></iron-icon>':'<iron-icon class="ko cent" icon="icons:close"></iron-icon>';
+                };
+
+                grid.columns[1].renderer = progressRenderer;
+
+                /*
+                grid.items = function(params, callback) {
+                    //var url = 'https://my.data/data?index=' + params.index + '&count=' + params.count;
+                    var url = 'src/days.json';
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            grid.size = response.length;
+                            callback(response);
+                        }
+                    };
+
+                    xhr.open('GET', url, true);
+                    xhr.send();
+                };
+                */
+                var url = 'src/days.json';
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        grid.size = response.length;
+                        grid.items = response;
+                    }
+                };
+
+                xhr.open('GET', url, true);
+                xhr.send();
+
+           });
+
+        }
+    });
+
+
+    /*
+    // The Servlet Components polyfill introduces a custom event we can
+    // use to determine when the custom elements are ready to be used.
+    document.addEventListener("WebComponentsReady", function () {
+
+        // Reference to the grid element.
+        var grid = document.querySelector("vaadin-grid");
+
+        // Add some example data as an array.
+        grid.items = [
+            { "day": "2017-03-17", "availability": 5, "enough": false},
+            { "day": "2017-03-17", "availability": 3, "enough": false},
+            { "day": "2017-03-17", "availability": 4, "enough": false},
+            { "day": "2017-03-17", "availability": 10, "enough": true},
+            { "day": "2017-03-17", "availability": 16, "enough": true},
+            { "day": "2017-03-17", "availability": 16, "enough": true},
+            { "day": "2017-03-17", "availability": 10, "enough": true},
+            { "day": "2017-03-17", "availability": 5, "enough": false}
+        ];
+
+        var progressRenderer = function(cell) {
+            cell.element.innerHTML = (cell.data)?'<iron-icon icon="icons:done"></iron-icon>':'';
+        };
+
+        grid.columns[2].renderer = progressRenderer;
+
+    });
+*/
+
+  </script>
+</dom-module>

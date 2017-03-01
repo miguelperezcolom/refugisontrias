@@ -1,0 +1,10 @@
+[
+  { "name": "1a", "day": "2017-03-17", "enough": false},
+  { "name": "2fwe", "day": "2017-03-17", "enough": false},
+  { "name": "3we", "day": "2017-03-17", "enough": false},
+  { "name": "4werew", "day": "2017-03-17", "enough": true},
+  { "name": "5we", "day": "2017-03-17", "enough": true},
+  { "name": "6werwe", "day": "2017-03-17", "enough": true},
+  { "name": "7ewr", "day": "2017-03-17", "enough": true},
+  { "name": "8werew", "day": "2017-03-17", "enough": false}
+]

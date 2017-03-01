@@ -1,0 +1,88 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<link rel="import" href="boton.html">
+
+<dom-module id="my-view4">
+  <template>
+    <style include="shared-styles boton">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <h1>Done</h1>
+      Your reservation is done. Please note that your booking will remain unconfirmed until payment is done.
+
+
+      <boton responsive><input type="button" on-click="_submit" value="Pay now"></boton>
+
+
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view4',
+
+        properties: {
+            user: Object,
+            data: {
+                type: Object,
+                notify: true,
+            },
+            cargando: Boolean,
+            route: {
+                type: Object,
+                notify: true,
+            },
+
+        },
+
+        errorRecibido: function(e, error) {
+            console.log(error.request); //ese es el iron-request de la solicitud
+            this.mensaje = 'Error en la solicitud, con código ' + error.request.status;
+        },
+
+        respuestaRecibida: function(e, request) {
+            if(request.succeeded) {
+                this.mensaje = 'la solicitud se resolvió correctamente con código ' + request.status
+            } else {
+                this.mensaje = 'la solicitud nos ofreció resultados incorrectos, con código ' + request.status
+            }
+        },
+
+        _submit: function(e) {
+            //this.set('resp', 'Hola!!!!')  ;
+            this.set('resp', JSON.stringify(this.data))  ;
+            //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
+            this.$.elajax.body = this.data;
+            this.$.elajax.generateRequest();
+        },
+
+    });
+  </script>
+</dom-module>

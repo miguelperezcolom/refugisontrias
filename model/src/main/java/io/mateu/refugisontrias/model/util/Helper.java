@@ -1,6 +1,7 @@
 package io.mateu.refugisontrias.model.util;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mateu.ui.core.server.SQLTransaction;
 import io.mateu.ui.core.server.Utils;
 
@@ -8,12 +9,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by miguel on 13/9/16.
@@ -23,6 +27,17 @@ public class Helper {
     private static DataSource dataSource;
     private static EntityManagerFactory emf;
 
+    private static ObjectMapper mapper = new ObjectMapper();
+
+
+    public static Map<String, Object> fromJson(String json) throws IOException {
+        if (json == null || "".equals(json)) json = "{}";
+        return mapper.readValue(json, Map.class);
+    }
+
+    public static String toJson(Object o) throws IOException {
+        return mapper.writeValueAsString(o);
+    }
 
     public static void transact(SQLTransaction t) throws Exception {
 
@@ -208,5 +223,20 @@ public class Helper {
 
     public static Object[][] selectPage(String sql, int desdeFila, int numeroFilas) throws Exception {
         return select(sql + " LIMIT " + numeroFilas + " OFFSET " + desdeFila);
+    }
+
+    public static Map<String,Object> hashmap(Object... args) {
+        Map<String,Object> m = new HashMap<>();
+        int pos = 0;
+        Object o0 = null;
+        for (Object o : args) {
+            if (pos > 0 && pos % 2 == 1) {
+                m.put("" + o0, o);
+            } else {
+                o0 = o;
+            }
+            pos++;
+        }
+        return m;
     }
 }

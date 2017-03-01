@@ -19,7 +19,7 @@
         "rewriteTsconfig": true
     },
     "files": [
-        "src/analyzer.ts",
+      "src/analyzer.ts",
         "src/ast-utils/analyze-properties.ts",
         "src/ast-utils/ast-value.ts",
         "src/ast-utils/behavior-finder.ts",

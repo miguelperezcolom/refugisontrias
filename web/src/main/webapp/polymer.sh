@@ -7,4 +7,4 @@ bower install --save PolymerElements/platinum-elements
 bower install --save GoogleWebComponents/google-web-components
 bower install --save vaadin-core-elements
 bower install --save vaadin-grid
-bower install paper-alert-dialog
+bower install --save paper-alert-dialog

@@ -15,7 +15,7 @@
       <module name="backoffice" target="1.8" />
       <module name="model" target="1.8" />
       <module name="refugisontrias" target="1.5" />
-      <module name="web" target="1.5" />
+      <module name="web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
