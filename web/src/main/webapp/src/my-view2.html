@@ -1,0 +1,112 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="boton.html">
+
+<dom-module id="my-view2">
+  <template>
+    <style include="shared-styles boton">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+    </style>
+
+    <div class="card">
+
+      <h1>No room. Please choose alternate checkin</h1>
+
+      <form is="iron-form" id="form" method="post" action="/form/handler">
+
+        <!--
+      <paper-input name="name" label="Name" requiredx value="{{data.nombre}}"></paper-input>
+-->
+
+
+      <iron-ajax auto url="servidor/entradas" body="{{data}}" content-type="application/json" method="POST" on-response="handleResponse" handleAs="json"></iron-ajax>
+         <paper-listbox class="dropdown-content" id="gg" name="pax" label="Pax" required selected="{{data.altselected}}" selectedItem="{{data.altentrada}}" attrForSelected="day">
+          <template is="dom-repeat" items="{{items_array}}">
+            <paper-item disabled="{{!item.enough}}" valor="{{item.day}}"><iron-icon icon="icons:{{getIcono(item.enough)}}" style="{{getEstilo(item.enough)}}" item-icon></iron-icon>{{item.day}}</paper-item>
+          </template>
+        </paper-listbox>
+
+      <br/>
+      </form>
+
+<!--
+      <paper-input name="dedwedwe" label="wedwedew" requiredx value="{{data.altentrada}}"></paper-input>
+-->
+      <template  is="dom-if" if="{{data.altselected}}">
+      <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view2',
+
+        properties: {
+            user: Object,
+            data: {
+                type: Object,
+                notify: true,
+            },
+            page: {
+                type: String,
+                notify: true,
+            },
+            route: {
+                type: Object,
+                notify: true,
+            },
+
+
+        },
+
+        getIcono: function(ok) {
+          if (ok) return 'check-circle';
+          else return 'close';
+        },
+
+        getEstilo: function(ok) {
+            if (ok) return 'color:green;';
+            else return 'color:red;';
+        },
+
+        _submit: function(e) {
+
+            console.log(this.page)
+            this.set('data.altcheckin', this.items_array[this.data.altselected].day)  ;
+            this.set('route.path', '/view3');
+
+        },
+
+        handleResponse: function(e, detail) {
+            console.log(this.id + " responseHandler fired!\n");
+            this.isBusy = false;
+
+            var grid = this.$.gg;
+
+            this.set('items_array', detail.xhr.response);
+        }
+    });
+
+  </script>
+</dom-module>
