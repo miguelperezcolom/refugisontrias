@@ -58,13 +58,15 @@ Botó: PAGAR RESERVA
 
       <div>{{data.resumen}}</div>
 
+      <form is="iron-form" id="form" method="post" action="/form/handler">
+
       <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
-      <paper-input name="surname" label="Surname" required value="{{data.nombre}}"></paper-input>
-      <paper-input name="dni" label="DNI" required value="{{data.nombre}}"></paper-input>
-      <paper-input name="email" label="Email" required></paper-input>
-      <paper-input name="phone" label="Phone" required></paper-input>
-      <paper-input name="country" label="Country" required></paper-input>
-      <paper-dropdown-menu name="bedsheets" label="Bed sheets">
+      <paper-input name="surname" label="Surname" required value="{{data.apellidos}}"></paper-input>
+      <paper-input name="dni" label="DNI" required value="{{data.dni}}"></paper-input>
+      <paper-input name="email" label="Email" required value="{{data.email}}"></paper-input>
+      <paper-input name="phone" label="Phone" required value="{{data.phone}}"></paper-input>
+      <paper-input name="country" label="Country" required value="{{data.pais}}"></paper-input>
+      <paper-dropdown-menu name="bedsheets" label="Bed sheets" value="{{data.sabanas}}">
         <paper-listbox class="dropdown-content">
           <paper-item>Bring sleeping bag</paper-item>
           <paper-listbox class="dropdown-content">
@@ -88,7 +90,7 @@ Botó: PAGAR RESERVA
         </paper-listbox>
       </paper-dropdown-menu>
       <br/>
-      <paper-dropdown-menu name="usekitchen" label="Use kitchen">
+      <paper-dropdown-menu name="usekitchen" label="Use kitchen" value="{{data.cocinas}}">
         <paper-listbox class="dropdown-content">
           <paper-item>No use kitchen</paper-item>
           <paper-listbox class="dropdown-content">
@@ -112,7 +114,11 @@ Botó: PAGAR RESERVA
         </paper-listbox>
       </paper-dropdown-menu>
       <br/>
-      <paper-textarea label="Estimated arrival time / others" name="comments"></paper-textarea>
+      <paper-textarea label="Estimated arrival time / others" name="comments" value="{{data.comentarios}}"></paper-textarea>
+
+
+      </form>
+
 
       <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
 
@@ -127,7 +133,7 @@ Botó: PAGAR RESERVA
 
       <iron-ajax
               id="elajax"
-              url="server.jsp"
+              url="/servidor/confirmar"
               handle-as="json"
               loading="{{cargando}}"
               method="POST"
@@ -173,10 +179,14 @@ Botó: PAGAR RESERVA
 
         _submit: function(e) {
             //this.set('resp', 'Hola!!!!')  ;
-            this.set('resp', JSON.stringify(this.data))  ;
+            //this.set('resp', JSON.stringify(this.data))  ;
             //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
-            this.$.elajax.body = this.data;
-            this.$.elajax.generateRequest();
+            if (this.$.form.validate()) {
+
+                this.$.elajax.body = this.data;
+                this.$.elajax.generateRequest();
+
+            }
         },
 
     });

@@ -1,5 +1,6 @@
 package io.mateu.refugisontrias.web;
 
+import io.mateu.refugisontrias.model.Reserva;
 import io.mateu.refugisontrias.model.util.Helper;
 import io.mateu.refugisontrias.model.util.JPATransaction;
 
@@ -73,7 +74,7 @@ public class Logic {
         return Helper.toJson(r);
     }
 
-    public static String confirmar(Map<String, Object> m) throws IOException {
+    public static String confirmar(Map<String, Object> m) throws Exception {
         LocalDate entrada = LocalDate.parse((String) m.get("entrada"), DateTimeFormatter.ISO_DATE);
         LocalDate salida = LocalDate.parse((String) m.get("salida"), DateTimeFormatter.ISO_DATE);
         int uds = Integer.parseInt((String) m.get("pax"));
@@ -81,6 +82,35 @@ public class Logic {
         int campings = ("camping".equals(m.get("que")))?uds:0;
 
         Map<String, Object> r = new HashMap<>();
+
+        Helper.transact(new JPATransaction() {
+            @Override
+            public void run(EntityManager em) throws Exception {
+                Reserva b = new Reserva();
+                b.setEntrada(entrada);
+                b.setSalida(salida);
+                b.setCamas(camas);
+                b.setCampings(campings);
+                b.setNombre((String) m.get("nombre"));
+                b.setApellidos((String) m.get("apellidos"));
+                b.setDni((String) m.get("dni"));
+                b.setPais((String) m.get("pais"));
+                b.setEmail((String) m.get("email"));
+                b.setTelefono((String) m.get("phone"));
+                b.setComentarios((String) m.get("comentarios"));
+                try {
+                    b.setRopasCama(Integer.parseInt((String) m.get("sabanas")));
+                } catch (Exception e) {
+
+                }
+                try {
+                    b.setCocinas(Integer.parseInt((String) m.get("cocinas")));
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
         return Helper.toJson(r);
     }
 
