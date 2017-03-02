@@ -47,7 +47,7 @@ public class Logic {
                 int pos = 0;
                 for (LocalDate i = entrada; i.isBefore(hasta); i = i.plusDays(1)) {
                     CupoDia c = a.getCupoPorDia().get(i);
-                    if (c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
+                    if (c == null || c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
                         hay = false;
                         break;
                     }
@@ -89,7 +89,7 @@ public class Logic {
                 int pos = 0;
                 for (LocalDate i = desde; i.isBefore(hasta); i = i.plusDays(1)) {
                     CupoDia c = a.getCupoPorDia().get(i);
-                    if (c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
+                    if (c == null || c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
                         for (int j = Math.toIntExact(pos - noches); j <= pos; j++) if (j >= 0 && j < hay.length) hay[j] = false;
                     }
                 }
