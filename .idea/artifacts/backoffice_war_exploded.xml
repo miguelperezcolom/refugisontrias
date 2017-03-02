@@ -21,8 +21,8 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.7" />
           <element id="library" level="project" name="Maven: io.mateu.ui:mdd:1.0-SNAPSHOT" />
-          <element id="file-copy" path="$MAVEN_REPOSITORY$/io/mateu/ui/code-generation/1.0-SNAPSHOT/code-generation-1.0-20170227.182753-16.jar" output-file-name="code-generation-1.0-SNAPSHOT.jar" />
-          <element id="file-copy" path="$MAVEN_REPOSITORY$/io/mateu/ui/core/1.0-SNAPSHOT/core-1.0-20170227.182755-18.jar" output-file-name="core-1.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: io.mateu.ui:code-generation:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: io.mateu.ui:core:1.0-SNAPSHOT" />
           <element id="library" level="project" name="Maven: org.reflections:reflections:0.9.10" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:15.0" />
           <element id="library" level="project" name="Maven: org.javassist:javassist:3.19.0-GA" />

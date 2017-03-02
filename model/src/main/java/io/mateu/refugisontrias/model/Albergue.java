@@ -1,5 +1,6 @@
 package io.mateu.refugisontrias.model;
 
+import io.mateu.ui.mdd.server.annotations.Ignored;
 import io.mateu.ui.mdd.server.annotations.ListColumn;
 import io.mateu.ui.mdd.server.annotations.QLForCombo;
 import lombok.Getter;
@@ -45,6 +46,7 @@ public class Albergue {
     private Map<LocalDate, CupoDia> cupoPorDia = new HashMap<>();
 
     @OneToMany(mappedBy = "albergue", cascade = CascadeType.PERSIST)
+    @Ignored
     private List<Reserva> reservas = new ArrayList<>();
 
     @Override
