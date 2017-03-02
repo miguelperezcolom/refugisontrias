@@ -1,5 +1,6 @@
 package io.mateu.refugisontrias.web;
 
+import io.mateu.refugisontrias.model.EstadoReserva;
 import io.mateu.refugisontrias.model.Reserva;
 import io.mateu.refugisontrias.model.util.Helper;
 import io.mateu.refugisontrias.model.util.JPATransaction;
@@ -87,6 +88,7 @@ public class Logic {
             @Override
             public void run(EntityManager em) throws Exception {
                 Reserva b = new Reserva();
+                b.setEstado(EstadoReserva.PENDIENTE);
                 b.setEntrada(entrada);
                 b.setSalida(salida);
                 b.setCamas(camas);
