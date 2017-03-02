@@ -1,5 +1,7 @@
 package io.mateu.refugisontrias.web;
 
+import io.mateu.refugisontrias.model.Albergue;
+import io.mateu.refugisontrias.model.CupoDia;
 import io.mateu.refugisontrias.model.EstadoReserva;
 import io.mateu.refugisontrias.model.Reserva;
 import io.mateu.refugisontrias.model.util.Helper;
@@ -35,9 +37,23 @@ public class Logic {
             @Override
             public void run(EntityManager em) throws Exception {
 
-                long noches = DAYS.between(entrada, salida);
+                long noches = DAYS.between(entrada, salida) - 1;
 
-                r.put("ok", "bedroom".equals(m.get("que")));
+                Albergue a = em.find(Albergue.class, 1l);
+
+                boolean hay = true;
+
+                LocalDate hasta = entrada.plusDays(noches);
+                int pos = 0;
+                for (LocalDate i = entrada; i.isBefore(hasta); i = i.plusDays(1)) {
+                    CupoDia c = a.getCupoPorDia().get(i);
+                    if (c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
+                        hay = false;
+                        break;
+                    }
+                }
+
+                r.put("ok", hay);
                 r.put("resumen", "Data IN " + entrada + " Data OUT " + salida + " PAX " + uds + " NITS " + noches + " " + m.get("que") + " SI<br/>" +
                         "Preu PAX/NIT ALLOTJAMENT = 14,00€<br/>" +
                         "Preu TOTAL allotjament = 140,00€");
@@ -55,18 +71,33 @@ public class Logic {
         int camas = ("bedroom".equals(m.get("que")))?uds:0;
         int campings = ("camping".equals(m.get("que")))?uds:0;
 
-        Map<String, Object> r = new HashMap<>();
+        List<Object> r = new ArrayList<>();
 
         Helper.transact(new JPATransaction() {
             @Override
             public void run(EntityManager em) throws Exception {
 
-                long noches = DAYS.between(entrada, salida);
+                long noches = DAYS.between(entrada, salida) - 1;
 
-                r.put("ok", "bedroom".equals(m.get("que")));
-                r.put("resumen", "Data IN " + entrada + " Data OUT " + salida + " PAX " + uds + " NITS " + noches + " " + m.get("que") + " SI<br/>" +
-                        "Preu PAX/NIT ALLOTJAMENT = 14,00€<br/>" +
-                        "Preu TOTAL allotjament = 140,00€");
+                Albergue a = em.find(Albergue.class, 1l);
+
+                boolean[] hay = new boolean[30];
+                for (int j = 0; j < hay.length; j++) hay[j] = true;
+
+                LocalDate desde = entrada.minusDays(15);
+                LocalDate hasta = entrada.plusDays(15 + noches);
+                int pos = 0;
+                for (LocalDate i = desde; i.isBefore(hasta); i = i.plusDays(1)) {
+                    CupoDia c = a.getCupoPorDia().get(i);
+                    if (c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
+                        for (int j = Math.toIntExact(pos - noches); j <= pos; j++) if (j >= 0 && j < hay.length) hay[j] = false;
+                    }
+                }
+
+                for (int i = 0; i < hay.length; i++) {
+                    LocalDate d = desde.plusDays(i);
+                    r.add(Helper.hashmap("day", d.format(DateTimeFormatter.ISO_DATE), "enough", hay[i]));
+                }
 
             }
         });
@@ -89,6 +120,8 @@ public class Logic {
             public void run(EntityManager em) throws Exception {
                 Reserva b = new Reserva();
                 b.setEstado(EstadoReserva.PENDIENTE);
+                b.setAlbergue(em.find(Albergue.class, 1l));
+                b.getAlbergue().getReservas().add(b);
                 b.setEntrada(entrada);
                 b.setSalida(salida);
                 b.setCamas(camas);

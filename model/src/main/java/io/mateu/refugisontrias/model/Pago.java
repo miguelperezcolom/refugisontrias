@@ -1,6 +1,7 @@
 package io.mateu.refugisontrias.model;
 
 import io.mateu.ui.mdd.server.annotations.Unmodifiable;
+import io.mateu.ui.mdd.server.interfaces.WithTriggers;
 import io.mateu.ui.mdd.server.util.Helper;
 import io.mateu.ui.mdd.server.util.JPATransaction;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class Pago {
+public class Pago implements WithTriggers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +31,27 @@ public class Pago {
     @Unmodifiable
     private Reserva reserva;
 
+    @Unmodifiable
     private double importe;
 
 
-    //@PostUpdate
-    private void post() throws Exception {
-        if (reserva != null) {
-            Helper.transact(new JPATransaction() {
-                @Override
-                public void run(EntityManager entityManager) throws Exception {
-                    entityManager.find(Reserva.class, reserva.getId()).preStore();
-                }
-            });
-        }
+    @Override
+    public void beforeSet() {
+
     }
 
+    @Override
+    public void afterSet() {
+        if (getReserva() != null) getReserva().totalizar();
+    }
+
+    @Override
+    public void beforeDelete() {
+
+    }
+
+    @Override
+    public void afterDelete() {
+
+    }
 }

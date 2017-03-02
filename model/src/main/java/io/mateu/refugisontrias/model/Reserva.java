@@ -4,6 +4,7 @@ import io.mateu.ui.mdd.server.annotations.Ignored;
 import io.mateu.ui.mdd.server.annotations.Output;
 import io.mateu.ui.mdd.server.annotations.QLForCombo;
 import io.mateu.ui.mdd.server.annotations.UseIdToSelect;
+import io.mateu.ui.mdd.server.interfaces.WithTriggers;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +22,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Getter
 @Setter
 @UseIdToSelect(ql = "select x.id, concat(x.apellidos, ', ', x.nombre, ' - ', x.entrada, ' - ', x.id) from Reserva x where x.id = xxxx")
-public class Reserva {
+public class Reserva implements WithTriggers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +30,9 @@ public class Reserva {
 
     @Embedded
     private Auditoria auditoria;
+
+    @ManyToOne
+    private Albergue albergue;
 
     private EstadoReserva estado;
 
@@ -83,27 +87,46 @@ public class Reserva {
         return "" + getApellidos() + ", " + getNombre() + " - " + getEntrada() + " - " + getId();
     }
 
+    public void totalizar() {
+        int noches = 0;
+        if (getEntrada() != null && getSalida() != null) noches = new Long(DAYS.between(entrada, salida)).intValue() - 1;
+        setNoches(noches);
 
-    @PreUpdate@PrePersist
-    public void preStore() {
-        totalEstancia = camas * precioCama + campings * precioCamping;
-        totalExtras = cocinas * precioCocina + ropasCama * precioRopaCama + toallas * precioToalla;
-        total = totalEstancia + totalExtras;
+        setTotalEstancia(getNoches() * (getCamas() * getPrecioCama() + getCampings() * getPrecioCamping()));
+        setTotalExtras(getNoches() * (getCocinas() * getPrecioCocina() + getRopasCama() * getPrecioRopaCama() + getToallas() * getPrecioToalla()));
+        setTotal(total = getTotalEstancia() + getTotalExtras());
         double pagado = 0;
-        for (Pago p : pagos) {
+        for (Pago p : getPagos()) {
             pagado += p.getImporte();
         }
-        saldo = total - pagado;
-
-        System.out.println("setPagado(" + pagado + ")");
-
-
         setPagado(pagado);
 
-        noches = 0;
-        if (entrada != null && salida != null) noches = new Long(DAYS.between(entrada, salida)).intValue();
+        setSaldo(getTotal() - getPagado());
+
+        if (getPagado() > 0 && EstadoReserva.PENDIENTE.equals(getEstado())) {
+            setEstado(EstadoReserva.OK);
+            if (getAlbergue() != null) getAlbergue().actualizarDisponibilidad();
+        }
 
     }
 
+    @Override
+    public void beforeSet() {
 
+    }
+
+    @Override
+    public void afterSet() {
+        if (getAlbergue() != null) getAlbergue().actualizarDisponibilidad();
+    }
+
+    @Override
+    public void beforeDelete() {
+        setEstado(EstadoReserva.CANCELLADA);
+    }
+
+    @Override
+    public void afterDelete() {
+        if (getAlbergue() != null) getAlbergue().actualizarDisponibilidad();
+    }
 }
