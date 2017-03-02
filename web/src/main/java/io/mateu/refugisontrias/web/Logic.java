@@ -108,6 +108,8 @@ public class Logic {
                 } catch (Exception e) {
 
                 }
+
+                em.persist(b);
             }
         });
 
