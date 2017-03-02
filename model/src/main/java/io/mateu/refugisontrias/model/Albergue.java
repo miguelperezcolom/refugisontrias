@@ -1,5 +1,6 @@
 package io.mateu.refugisontrias.model;
 
+import io.mateu.ui.mdd.server.annotations.ListColumn;
 import io.mateu.ui.mdd.server.annotations.QLForCombo;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class Albergue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ListColumn("Nombre")
     private String nombre;
     private String url;
 
