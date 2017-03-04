@@ -158,4 +158,11 @@ public class Logic {
         }
         return Helper.toJson(valores);
     }
+
+
+    public static void main(String... args) throws Exception {
+        System.out.println(checkDisponibilidad(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-02\",\"salida\":\"2017-04-03\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
+        System.out.println(getEntradasAlternativas(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-02\",\"salida\":\"2017-04-03\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
+    }
+
 }

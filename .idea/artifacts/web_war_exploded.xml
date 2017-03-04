@@ -13,7 +13,7 @@
           <element id="library" level="project" name="Maven: org.eclipse.persistence:eclipselink:2.5.0-RC1" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:javax.persistence:2.1.0-RC1" />
           <element id="library" level="project" name="Maven: org.postgresql:postgresql:9.4.1210" />
-          <element id="library" level="project" name="Maven: io.mateu.ui:core:1.0-SNAPSHOT" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/io/mateu/ui/core/1.0-SNAPSHOT/core-1.0-20170302.210424-19.jar" output-file-name="core-1.0-SNAPSHOT.jar" />
           <element id="library" level="project" name="Maven: org.reflections:reflections:0.9.10" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:15.0" />
           <element id="library" level="project" name="Maven: org.javassist:javassist:3.19.0-GA" />
