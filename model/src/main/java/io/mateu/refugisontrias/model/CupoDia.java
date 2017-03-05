@@ -1,6 +1,7 @@
 package io.mateu.refugisontrias.model;
 
 import io.mateu.ui.mdd.server.annotations.*;
+import io.mateu.ui.mdd.server.interfaces.WithTriggers;
 import io.mateu.ui.mdd.server.util.Helper;
 import io.mateu.ui.mdd.server.util.JPATransaction;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-public class CupoDia {
+public class CupoDia implements WithTriggers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +29,11 @@ public class CupoDia {
     @Unmodifiable
     private LocalDate fecha;
 
+    @StartsLine
     private int cupoCamas;
     private int cupoCamping;
 
+    @StartsLine
     @Output
     private int reservadoCamas;
     @Output
@@ -39,6 +42,11 @@ public class CupoDia {
     private int disponibleCamas;
     @Output
     private int disponibleCamping;
+
+    public void totalizar() {
+        setDisponibleCamas(getCupoCamas() - getReservadoCamas());
+        setDisponibleCamping(getCupoCamping() - getReservadoCamping());
+    }
 
 
     @Action(name = "Fijar cupo camas")
@@ -55,9 +63,29 @@ public class CupoDia {
                         c.setFecha(i);
                     }
                     c.setCupoCamas(cupo);
+                    c.totalizar();
                 }
             }
         });
     }
 
+    @Override
+    public void beforeSet(boolean b) {
+
+    }
+
+    @Override
+    public void afterSet(boolean b) {
+        totalizar();
+    }
+
+    @Override
+    public void beforeDelete() {
+
+    }
+
+    @Override
+    public void afterDelete() {
+
+    }
 }

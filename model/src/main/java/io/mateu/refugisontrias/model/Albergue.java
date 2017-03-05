@@ -3,6 +3,7 @@ package io.mateu.refugisontrias.model;
 import io.mateu.ui.mdd.server.annotations.Ignored;
 import io.mateu.ui.mdd.server.annotations.ListColumn;
 import io.mateu.ui.mdd.server.annotations.QLForCombo;
+import io.mateu.ui.mdd.server.annotations.StartsLine;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,11 +31,12 @@ public class Albergue {
     private String nombre;
     private String url;
 
+    @StartsLine
     private String emailHost;
     private String emailUsuario;
     private String emailPassword;
 
-
+    @StartsLine
     private double precioCama;
     private double precioCamping;
     private double precioCocina;
@@ -57,10 +59,9 @@ public class Albergue {
 
     public void actualizarDisponibilidad() {
         for (CupoDia c : getCupoPorDia().values()) {
-            c.setDisponibleCamas(c.getCupoCamas());
-            c.setDisponibleCamping(c.getCupoCamping());
             c.setReservadoCamas(0);
             c.setReservadoCamping(0);
+            c.totalizar();
         }
         for (Reserva r : getReservas()) if (EstadoReserva.OK.equals(r.getEstado())) {
             for (LocalDate d = r.getEntrada(); d.isBefore(r.getSalida()); d = d.plusDays(1)) {
@@ -72,9 +73,8 @@ public class Albergue {
                     getCupoPorDia().put(d, c);
                 }
                 c.setReservadoCamas(c.getReservadoCamas() + r.getCamas());
-                c.setDisponibleCamas(c.getCupoCamas() - c.getReservadoCamas());
                 c.setReservadoCamping(c.getReservadoCamping() + r.getCampings());
-                c.setDisponibleCamping(c.getCupoCamping() - c.getReservadoCamping());
+                c.totalizar();
             }
         }
     }

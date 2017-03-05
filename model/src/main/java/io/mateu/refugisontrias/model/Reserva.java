@@ -1,9 +1,6 @@
 package io.mateu.refugisontrias.model;
 
-import io.mateu.ui.mdd.server.annotations.Ignored;
-import io.mateu.ui.mdd.server.annotations.Output;
-import io.mateu.ui.mdd.server.annotations.QLForCombo;
-import io.mateu.ui.mdd.server.annotations.UseIdToSelect;
+import io.mateu.ui.mdd.server.annotations.*;
 import io.mateu.ui.mdd.server.interfaces.WithTriggers;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,16 +28,20 @@ public class Reserva implements WithTriggers {
     @Embedded
     private Auditoria auditoria;
 
+    @StartsLine
     @ManyToOne
+    @Required
     private Albergue albergue;
 
     private EstadoReserva estado;
 
+    @StartsLine
     private LocalDate entrada;
     private LocalDate salida;
     @Output
     private int noches;
 
+    @StartsLine
     private String nombre;
     private String apellidos;
     private String dni;
@@ -49,12 +50,14 @@ public class Reserva implements WithTriggers {
     private String telefono;
     private String email;
 
+    @StartsLine
     private int camas;
     private int campings;
     private int cocinas;
     private int ropasCama;
     private int toallas;
 
+    @StartsLine
     @Output
     private double totalEstancia;
     @Output
@@ -70,6 +73,7 @@ public class Reserva implements WithTriggers {
     @Output
     private double totalExtras;
 
+    @StartsLine
     @Output
     private double saldo;
     @Output
@@ -110,14 +114,25 @@ public class Reserva implements WithTriggers {
 
     }
 
-    @Override
-    public void beforeSet() {
 
+
+    @Override
+    public void beforeSet(boolean isNew) {
     }
 
     @Override
-    public void afterSet() {
-        if (getAlbergue() != null) getAlbergue().actualizarDisponibilidad();
+    public void afterSet(boolean isNew) {
+        if (getAlbergue() != null) {
+            if (isNew) {
+                setPrecioCama(getAlbergue().getPrecioCama());
+                setPrecioCamping(getAlbergue().getPrecioCamping());
+                setPrecioCocina(getAlbergue().getPrecioCocina());
+                setPrecioRopaCama(getAlbergue().getPrecioRopaCama());
+                setPrecioToalla(getAlbergue().getPrecioToalla());
+            }
+            getAlbergue().actualizarDisponibilidad();
+        }
+        totalizar();
     }
 
     @Override

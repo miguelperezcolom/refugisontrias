@@ -36,12 +36,12 @@ public class Pago implements WithTriggers {
 
 
     @Override
-    public void beforeSet() {
+    public void beforeSet(boolean isNew) {
 
     }
 
     @Override
-    public void afterSet() {
+    public void afterSet(boolean isNew) {
         if (getReserva() != null) getReserva().totalizar();
     }
 
@@ -52,6 +52,6 @@ public class Pago implements WithTriggers {
 
     @Override
     public void afterDelete() {
-
+        if (getReserva() != null) getReserva().totalizar();
     }
 }
