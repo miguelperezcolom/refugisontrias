@@ -64,7 +64,7 @@ Botó: PAGAR RESERVA
       <form is="iron-form" id="form" method="post" action="/form/handler">
 
       <paper-input  name="name" label="Nom / Name *" required value="{{data.nombre}}" pattern="[A-Za-z]*"  auto-validate="true"></paper-input>
-      <paper-input  name="surname" label="Cognom / Surname" required value="{{data.apellidos}}" pattern="[A-Za-z]*"  auto-validate="true"></paper-input>
+      <paper-input  name="surname" label="Cognom / Surname" required value="{{data.apellidos}}" ></paper-input>
       <paper-input  name="dni" label="DNI / ID" required value="{{data.dni}}"></paper-input>
       <paper-input  name="email" label="Email" required value="{{data.email}}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address" auto-validate="true"></paper-input>
       <paper-input  name="phone" label="Telèfon / Phone *" required value="{{data.phone}}" pattern="[0-9]*" error="Please only numbers"  auto-validate="true"></paper-input>
