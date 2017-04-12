@@ -47,6 +47,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #212121;
         font-size: 22px;
       }
+      form {
+	  max-width: 400px;
+	  }
+          :root {
+        /* Label and underline color when the input is not focused */
+        --paper-input-container-color: black;
+
+        /* Label and underline color when the input is focused */
+        --paper-input-container-focus-color: #71a83b;
+
+        /* Label and underline color when the input is invalid */
+        --paper-input-container-invalid-color: red;
+
+        /* Input foreground color */
+        --paper-input-container-input-color: black;
+/* radio-button */
+--paper-radio-button-checked-color:#71a83b;
+}
+
     </style>
   </template>
 </dom-module>
