@@ -23,135 +23,164 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="boton.html">
 
 <dom-module id="my-view1">
-  <template>
-    <style include="shared-styles boton">
-      :host {
-        display: block;
+    <template>
+        <style include="shared-styles boton">
+            :host {
+                display: block;
 
-        padding: 10px;
-      }
-    </style>
+                padding: 10px;
+            }
+        </style>
 
-    <div class="card">
+        <div class="card">
 
-      <form is="iron-form" id="form" method="post" action="/form/handler">
+            <form is="iron-form" id="form" method="post" action="/form/handler">
 
-        <!--
-      <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
-      <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
--->
-      <vaadin-date-picker name="checkin" id="d0" label="Checkin"  min="2017-02-01" max="2017-12-31" initial-position="2017-02-01" required value="{{data.entrada}}">
-      </vaadin-date-picker>
-      <vaadin-date-picker name="checkout" id="d1" label="Checkout"  min="2017-02-01" max="2017-12-31" initial-position="2017-02-01" required value="{{data.salida}}">
-      </vaadin-date-picker>
-      <paper-input name="nights" id="n" label="Nights" disabled></paper-input>
-
-
-      <paper-dropdown-menu name="pax" label="Pax" required value="{{data.pax}}">
-        <paper-listbox class="dropdown-content" id="gg">
-          <template is="dom-repeat" items="{{items_array}}">
-            <paper-item value="{{item-value}}">{{item.text}}</paper-item>
-          </template>
-        </paper-listbox>
-      </paper-dropdown-menu>
-
-      <br/>
-      <paper-radio-group name="allotment" attr-for-selected="value" fallback-selection="other" selected="{{data.que}}">
-        <paper-radio-button name="allotment" value="bedroom">Bedroom</paper-radio-button>
-        <paper-radio-button name="allotment" value="camping">Camping</paper-radio-button>
-      </paper-radio-group>
-
-      <br/>
-
-        <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
-
-      </form>
-    </div>
+                <!--
+              <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
+              <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
+                -->
+                <vaadin-date-picker name="checkin" id="d0" label="Checkin"  min="[[today]]"  max="2017-12-31" initial-position="[[today]]" required value="{{data.entrada}}">
+                </vaadin-date-picker>
+                <vaadin-date-picker name="checkout" id="d1" label="Checkout"  max="2017-12-31" required value="{{data.salida}}">
+                </vaadin-date-picker>
+                <paper-input name="nights" id="n" label="Nights" disabled></paper-input>
 
 
-    <iron-ajax auto url="/servidor/combopax" on-response="handleResponse" handleAs="json"></iron-ajax>
-    <iron-ajax id="dispo" url="/servidor/checkdispo" on-response="handledispo" handleAs="json" method="POST"></iron-ajax>
-  </template>
+                <paper-dropdown-menu name="pax" label="Pax" required value="{{data.pax}}">
+                    <paper-listbox class="dropdown-content" id="gg">
+                        <template is="dom-repeat" items="{{items_array}}">
+                            <paper-item value="{{item-value}}">{{item.text}}</paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
 
-  <script>
-    Polymer({
-      is: 'my-view1',
+                <br/>
+                <paper-radio-group name="allotment" attr-for-selected="value" fallback-selection="other" selected="{{data.que}}">
+                    <paper-radio-button name="allotment" value="bedroom">Bedroom</paper-radio-button>
+                    <paper-radio-button name="allotment" value="camping">Camping</paper-radio-button>
+                </paper-radio-group>
 
-        properties: {
-            user: Object,
-            data: {
-                type: Object,
-                notify: true,
-                value: {que: 'bedroom',},
+                <br/>
+
+                <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
+
+            </form>
+        </div>
+
+
+        <iron-ajax auto url="/servidor/combopax" on-response="handleResponse" handleAs="json"></iron-ajax>
+        <iron-ajax id="dispo" url="/servidor/checkdispo" on-response="handledispo" handleAs="json" method="POST"></iron-ajax>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-view1',
+
+            properties: {
+                user: Object,
+                data: {
+                    type: Object,
+                    notify: true,
+                    value: {que: 'bedroom', },
+                },
+                page: {
+                    type: String,
+                    notify: true,
+                },
+                route: {
+                    type: Object,
+                    notify: true,
+                },
+                today: {
+                    //include today date to the attr today
+                    value: function () {
+                        return new Date().toISOString().substring(0, 10);
+                    }
+                },
             },
-            page: {
-                type: String,
-                notify: true,
+
+            _submit: function (e) {
+                //this.set('resp', 'Hola!!!!')  ;
+
+                if (this.$.form.validate()) {
+
+                    //this.set('resp', JSON.stringify(this.data))  ;
+                    //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
+                    this.$.dispo.body = JSON.stringify(this.data);
+                    this.$.dispo.generateRequest();
+
+                }
             },
-            route: {
-                type: Object,
-                notify: true,
+
+            handleResponse: function (e, detail) {
+                console.log(this.id + " responseHandler fired!\n");
+                this.isBusy = false;
+
+                this.set('items_array', detail.xhr.response);
             },
-        },
 
-        _submit: function(e) {
-            //this.set('resp', 'Hola!!!!')  ;
+            handledispo: function (e, detail) {
+                //this.set('items_array', detail.xhr.response);
+                if (detail.xhr.response.ok) {
+                    this.set("data.resumen", detail.xhr.response.resumen);
+                    this.set('route.path', '/view3');
+                } else
+                    this.set('route.path', '/view2');
+            },
 
-            if (this.$.form.validate()) {
+            ready: function () {
+                //this.$.name.textContent = this.tagName;
 
-                //this.set('resp', JSON.stringify(this.data))  ;
-                //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
-                this.$.dispo.body = JSON.stringify(this.data);
-                this.$.dispo.generateRequest();
+                var d0 = this.$.d0;
+                var d1 = this.$.d1;
+                var n = this.$.n;
+                //		document.querySelector('vaadin-date-picker').set('i18n.firstDayOfWeek', 1);//SET MONDAY FIRST DATE OF WEEK
+
+                d0.addEventListener('value-changed', function () {
+                    if (d0.hasValue) {
+                        /*
+                         console.log("Set D1 with min D0 value"); 
+                         console.log("D0 value " + d0.value); 
+                         */
+                        d1.setAttribute("min", d0.value);
+                        d1.setAttribute("initial-position", d0.value);
+                    }
+                    if (d0.hasValue && d1.hasValue) {
+                        console.log("d0=" + d0.value);
+                        console.log("d1=" + d1.value);
+                        n.value = daysBetween(Date.parse(d0.value), Date.parse(d1.value));
+                        console.log("n=" + n.value);
+                    }
+                });
+                d1.addEventListener('value-changed', function () {
+                    if (d0.hasValue && d1.hasValue) {
+                        console.log("d0=" + d0.value);
+                        console.log("d1=" + d1.value);
+                        n.value = daysBetween(Date.parse(d0.value), Date.parse(d1.value));
+                        console.log("n=" + n.value);
+                    }
+                });
+
+                //Una vez seleccionado el d0 se abre d1 con el valor seleccionado como minimo
+//			var start = document.querySelector('#d0');
+//			  var end = document.querySelector('#d1');
+//			  start.addEventListener('value-changed', function() {
+//			    // Open the end date picker with a delay to
+//			    // make it less confusing.
+//			    window.setTimeout(function() {
+//			      end.value = start.value;
+//			      end.open();
+//			    }, 500);
+//			  });
+
 
             }
-        },
+        });
 
-        handleResponse: function(e, detail) {
-            console.log(this.id + " responseHandler fired!\n");
-            this.isBusy = false;
-
-            this.set('items_array', detail.xhr.response);
-        },
-
-        handledispo: function(e, detail) {
-            //this.set('items_array', detail.xhr.response);
-            if (detail.xhr.response.ok) {
-                this.set("data.resumen", detail.xhr.response.resumen);
-                this.set('route.path', '/view3');
-            }
-            else this.set('route.path', '/view2');
-        },
-
-        ready: function() {
-            //this.$.name.textContent = this.tagName;
-
-            var d0 = this.$.d0;
-            var d1 = this.$.d1;
-            var n = this.$.n;
-
-            d0.addEventListener('value-changed', function() {
-                if (d0.hasValue && d1.hasValue) {
-                    console.log("d0=" + d0.value);
-                    console.log("d1=" + d1.value);
-                    n.value=daysBetween(Date.parse(d0.value), Date.parse(d1.value));
-                    console.log("n=" + n.value);
-                }
-            });
-            d1.addEventListener('value-changed', function() {
-                if (d0.hasValue && d1.hasValue) {
-                    console.log("d0=" + d0.value);
-                    console.log("d1=" + d1.value);
-                    n.value=daysBetween(Date.parse(d0.value), Date.parse(d1.value));
-                    console.log("n=" + n.value);
-                }
-            });
+        function daysBetween(one, another) {
+            return Math.round(Math.abs((+one) - (+another)) / 8.64e7);
         }
-    });
 
-    function daysBetween(one, another) {
-        return Math.round(Math.abs((+one) - (+another))/8.64e7);
-    }
-
-  </script>
+    </script>
 </dom-module>
