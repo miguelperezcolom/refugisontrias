@@ -2,6 +2,11 @@ package io.mateu.refugisontrias.model.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import io.mateu.ui.core.server.SQLTransaction;
 import io.mateu.ui.core.server.Utils;
 
@@ -9,15 +14,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by miguel on 13/9/16.
@@ -28,6 +30,32 @@ public class Helper {
     private static EntityManagerFactory emf;
 
     private static ObjectMapper mapper = new ObjectMapper();
+
+    // Create your Configuration instance, and specify if up to what FreeMarker
+// version (here 2.3.25) do you want to apply the fixes that are not 100%
+// backward-compatible. See the Configuration JavaDoc for details.
+    private static Configuration cfg = new Configuration(Configuration.VERSION_2_3_25);
+
+    {
+// Specify the source where the template files come from. Here I set a
+// plain directory for it, but non-file-system sources are possible too:
+        try {
+            cfg.setDirectoryForTemplateLoading(new File(""));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+// Set the preferred charset template files are stored in. UTF-8 is
+// a good choice in most applications:
+        cfg.setDefaultEncoding("UTF-8");
+
+// Sets how errors will appear.
+// During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+// Don't log exceptions inside FreeMarker that it will thrown at you anyway:
+        cfg.setLogTemplateExceptions(false);
+    }
 
 
     public static Map<String, Object> fromJson(String json) throws IOException {
@@ -238,5 +266,43 @@ public class Helper {
             pos++;
         }
         return m;
+    }
+
+    public static double roundOffEuros(double v) {
+        return Math.round(100d * v) / 100d;
+    }
+
+    public static String freemark(String freemarker, Map<String, Object> root) throws IOException, TemplateException {
+
+        long t0 = new Date().getTime();
+
+        //Template temp = cfg.getTemplate("test.ftlh");
+
+        Template temp = new Template("name", new StringReader(freemarker),
+                new Configuration());
+
+        /*
+        StringTemplateLoader stringLoader = new StringTemplateLoader();
+        stringLoader.putTemplate("greetTemplate", "<#macro greet>Hello</#macro>");
+        stringLoader.putTemplate("myTemplate", "<#include \"greetTemplate\"><@greet/> World!");
+        cfg.setTemplateLoader(stringLoader);
+        */
+
+        StringWriter out = new StringWriter(); //new OutputStreamWriter(System.out);
+        temp.process(root, out);
+
+        System.out.println("freemarker template compiled and applied in " + (new Date().getTime() - t0) + " ms.");
+
+        return out.toString();
+    }
+
+    public static int toInt(String s) {
+        int v = 0;
+        try {
+            v = Integer.parseInt(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
     }
 }

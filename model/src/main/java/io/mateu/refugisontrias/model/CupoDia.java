@@ -22,12 +22,14 @@ public class CupoDia implements WithTriggers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Unmodifiable
+    @ListColumn(ql="sql('to_char(?, ''YYYY-MM-DD Dy'')', x.fecha)")
+    @SearchFilter()
+    private LocalDate fecha;
+
     @ManyToOne
     @Unmodifiable
     private Albergue albergue;
-
-    @Unmodifiable
-    private LocalDate fecha;
 
     @StartsLine
     private int cupoCamas;
@@ -35,13 +37,19 @@ public class CupoDia implements WithTriggers {
 
     @StartsLine
     @Output
-    private int reservadoCamas;
-    @Output
-    private int reservadoCamping;
-    @Output
+    @ListColumn
+    @CellStyleGenerator(CupoCellStyleGenerator.class)
     private int disponibleCamas;
     @Output
+    @ListColumn
+    private int reservadoCamas;
+    @Output
+    @ListColumn
+    @CellStyleGenerator(CupoCellStyleGenerator.class)
     private int disponibleCamping;
+    @Output
+    @ListColumn
+    private int reservadoCamping;
 
     public void totalizar() {
         setDisponibleCamas(getCupoCamas() - getReservadoCamas());
@@ -50,10 +58,10 @@ public class CupoDia implements WithTriggers {
 
 
     @Action(name = "Fijar cupo camas")
-    public static void setCupoCamas(@Required@Caption("Del") LocalDate del, @Required@Caption("Al") LocalDate al, @Required@Caption("Cupo") int cupo) throws Exception {
+    public static void setCupoCamas(@Required@Caption("Del") LocalDate del, @Required@Caption("Al") LocalDate al, @Required@Caption("Cupo") int cupo) throws Throwable {
         Helper.transact(new JPATransaction() {
             @Override
-            public void run(EntityManager em) throws Exception {
+            public void run(EntityManager em) throws Throwable {
                 Albergue a = em.find(Albergue.class, 1l);
                 for (LocalDate i = del; i.isBefore(al) || i.equals(al); i = i.plusDays(1)) {
                     CupoDia c = a.getCupoPorDia().get(i);
@@ -69,23 +77,43 @@ public class CupoDia implements WithTriggers {
         });
     }
 
+    @Action(name = "Fijar cupo camping")
+    public static void setCupoCamping(@Required@Caption("Del") LocalDate del, @Required@Caption("Al") LocalDate al, @Required@Caption("Cupo") int cupo) throws Throwable {
+        Helper.transact(new JPATransaction() {
+            @Override
+            public void run(EntityManager em) throws Throwable {
+                Albergue a = em.find(Albergue.class, 1l);
+                for (LocalDate i = del; i.isBefore(al) || i.equals(al); i = i.plusDays(1)) {
+                    CupoDia c = a.getCupoPorDia().get(i);
+                    if (c == null) {
+                        a.getCupoPorDia().put(i, c = new CupoDia());
+                        c.setAlbergue(a);
+                        c.setFecha(i);
+                    }
+                    c.setCupoCamping(cupo);
+                    c.totalizar();
+                }
+            }
+        });
+    }
+
     @Override
-    public void beforeSet(boolean b) {
+    public void beforeSet(EntityManager em, boolean b) {
 
     }
 
     @Override
-    public void afterSet(boolean b) {
+    public void afterSet(EntityManager em, boolean b) {
         totalizar();
     }
 
     @Override
-    public void beforeDelete() {
+    public void beforeDelete(EntityManager em) {
 
     }
 
     @Override
-    public void afterDelete() {
+    public void afterDelete(EntityManager em) {
 
     }
 }

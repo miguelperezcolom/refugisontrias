@@ -1,9 +1,6 @@
 package io.mateu.refugisontrias.model;
 
-import io.mateu.ui.mdd.server.annotations.Ignored;
-import io.mateu.ui.mdd.server.annotations.ListColumn;
-import io.mateu.ui.mdd.server.annotations.QLForCombo;
-import io.mateu.ui.mdd.server.annotations.StartsLine;
+import io.mateu.ui.mdd.server.annotations.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,15 +30,36 @@ public class Albergue {
 
     @StartsLine
     private String emailHost;
+    private int emailPort;
     private String emailUsuario;
     private String emailPassword;
+    private String emailFrom;
+    private String emailCC;
+
+    @StartsLine
+    private TPV tpv;
 
     @StartsLine
     private double precioCama;
     private double precioCamping;
+    private double precioTienda;
     private double precioCocina;
     private double precioRopaCama;
     private double precioToalla;
+
+    @StartsLine
+    @TextArea
+    private String paymentEmailTemplate;
+    @TextArea
+    private String bookingDoneEmailTemplate;
+    @TextArea
+    private String bookingCancelledEmailTemplate;
+    @TextArea
+    private String bookingExpriringEmailTemplate;
+    @TextArea
+    private String bookingExpiredEmailTemplate;
+    @TextArea
+    private String bookingConfirmedEmailTemplate;
 
     @OneToMany(mappedBy="albergue", cascade = CascadeType.ALL)
     @MapKey(name="fecha")
@@ -63,7 +81,7 @@ public class Albergue {
             c.setReservadoCamping(0);
             c.totalizar();
         }
-        for (Reserva r : getReservas()) if (EstadoReserva.OK.equals(r.getEstado())) {
+        for (Reserva r : getReservas()) if (EstadoReserva.PENDIENTE.equals(r.getEstado()) || EstadoReserva.OK.equals(r.getEstado())) {
             for (LocalDate d = r.getEntrada(); d.isBefore(r.getSalida()); d = d.plusDays(1)) {
                 CupoDia c = getCupoPorDia().get(d);
                 if (c == null) {

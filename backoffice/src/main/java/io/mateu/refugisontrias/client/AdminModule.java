@@ -19,19 +19,30 @@ public class AdminModule extends AbstractModule {
     public List<MenuEntry> getMenu() {
         List<MenuEntry> m = new ArrayList<>();
 
-        m.add(new AbstractAction("Usuarios") {
-            @Override
-            public void run() {
-                ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.Usuario", new MDDCallback());
-            }
-        });
+        if (MateuUI.hasPermission(1)) {
 
-        m.add(new AbstractAction("Configuración") {
-            @Override
-            public void run() {
-                ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.Albergue", new MDDCallback());
-            }
-        });
+            m.add(new AbstractAction("Usuarios") {
+                @Override
+                public void run() {
+                    ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.Usuario", new MDDCallback());
+                }
+            });
+
+            m.add(new AbstractAction("Configuración") {
+                @Override
+                public void run() {
+                    ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.Albergue", new MDDCallback());
+                }
+            });
+
+            m.add(new AbstractAction("TPVs") {
+                @Override
+                public void run() {
+                    ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.TPV", new MDDCallback());
+                }
+            });
+
+        }
 
         m.add(new AbstractAction("Cupo") {
             @Override

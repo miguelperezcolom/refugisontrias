@@ -8,7 +8,7 @@ import io.mateu.ui.mdd.server.util.JPATransaction;
  */
 public class Populator {
 
-    public static void main(String... args) throws Exception {
+    public static void main(String... args) throws Throwable {
 
         System.out.println("Populating database...");
 

@@ -34,6 +34,15 @@ public class BookingModule extends AbstractModule {
             }
         });
 
+        m.add(new AbstractAction("Transacciones TPV") {
+            @Override
+            public void run() {
+                ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.TPVTransaction", new MDDCallback());
+            }
+        });
+
+
+
         return m;
     }
 }

@@ -1,14 +1,12 @@
-package io.mateu.refugisontrias.web;
+package io.mateu.refugisontrias.servlet;
 
-import io.mateu.refugisontrias.model.Albergue;
-import io.mateu.refugisontrias.model.CupoDia;
-import io.mateu.refugisontrias.model.EstadoReserva;
-import io.mateu.refugisontrias.model.Reserva;
+import io.mateu.refugisontrias.model.*;
 import io.mateu.refugisontrias.model.util.Helper;
 import io.mateu.refugisontrias.model.util.JPATransaction;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public class Logic {
 
                 boolean hay = true;
 
-                LocalDate hasta = entrada.plusDays(noches);
+                LocalDate hasta = entrada.plusDays(noches + 1);
                 int pos = 0;
                 for (LocalDate i = entrada; i.isBefore(hasta); i = i.plusDays(1)) {
                     CupoDia c = a.getCupoPorDia().get(i);
@@ -53,10 +51,15 @@ public class Logic {
                     }
                 }
 
+                double total = noches * (camas * a.getPrecioCama() + campings * a.getPrecioCamping());
+                double totalNoche = (noches > 0)? total / noches:0;
+
+                DecimalFormat df = new DecimalFormat("0.00");
+
                 r.put("ok", hay);
                 r.put("resumen", "Data IN " + entrada + " Data OUT " + salida + " PAX " + uds + " NITS " + noches + " " + m.get("que") + " SI<br/>" +
-                        "Preu PAX/NIT ALLOTJAMENT = 14,00€<br/>" +
-                        "Preu TOTAL allotjament = 140,00€");
+                        "Preu PAX/NIT ALLOTJAMENT = " + df.format(totalNoche) + "€<br/>" +
+                        "Preu TOTAL allotjament = " + df.format(total) + "€");
 
             }
         });
@@ -81,17 +84,20 @@ public class Logic {
 
                 Albergue a = em.find(Albergue.class, 1l);
 
-                boolean[] hay = new boolean[30];
+                LocalDate desde = entrada.minusDays(15);
+                if (desde.isBefore(LocalDate.now())) desde = LocalDate.now();
+                LocalDate hasta = entrada.plusDays(15 + noches);
+
+                boolean[] hay = new boolean[Math.toIntExact(DAYS.between(desde, hasta))];
                 for (int j = 0; j < hay.length; j++) hay[j] = true;
 
-                LocalDate desde = entrada.minusDays(15);
-                LocalDate hasta = entrada.plusDays(15 + noches);
                 int pos = 0;
                 for (LocalDate i = desde; i.isBefore(hasta); i = i.plusDays(1)) {
                     CupoDia c = a.getCupoPorDia().get(i);
                     if (c == null || c.getDisponibleCamas() < camas || c.getDisponibleCamping() < campings) {
                         for (int j = Math.toIntExact(pos - noches); j <= pos; j++) if (j >= 0 && j < hay.length) hay[j] = false;
                     }
+                    pos++;
                 }
 
                 for (int i = 0; i < hay.length; i++) {
@@ -145,6 +151,13 @@ public class Logic {
                 }
 
                 em.persist(b);
+                em.flush();
+
+                TPVTransaction t = b.getTransaccionTPV(em);
+                if (t != null) {
+                    r.put("paymentlink", t.getBoton());
+                }
+
             }
         });
 
@@ -161,8 +174,8 @@ public class Logic {
 
 
     public static void main(String... args) throws Exception {
-        System.out.println(checkDisponibilidad(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-02\",\"salida\":\"2017-04-03\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
-        System.out.println(getEntradasAlternativas(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-02\",\"salida\":\"2017-04-03\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
+        System.out.println(checkDisponibilidad(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-20\",\"salida\":\"2017-04-27\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
+        System.out.println(getEntradasAlternativas(Helper.fromJson("{\"que\":\"bedroom\",\"entrada\":\"2017-04-20\",\"salida\":\"2017-04-27\",\"pax\":\"1\",\"resumen\":\"Data IN 2017-04-02 Data OUT 2017-04-03 PAX 1 NITS 0 bedroom SI<br/>Preu PAX/NIT ALLOTJAMENT : 14,00?<br/>Preu TOTAL allotjament = 140,00?\"}")));
     }
 
 }

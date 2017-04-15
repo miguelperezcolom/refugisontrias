@@ -41,7 +41,7 @@ We don't have availability, please choose the alternative date for check in and 
 -->
 
 
-      <iron-ajax auto url="servidor/entradas" body="{{data}}" content-type="application/json" method="POST" on-response="handleResponse" handleAs="json"></iron-ajax>
+      <iron-ajax auto url="/servidor/entradas" body="{{data}}" content-type="application/json" method="POST" on-response="handleResponse" handleAs="json"></iron-ajax>
          <paper-listbox class="dropdown-content" id="gg" name="pax" label="Pax" required selected="{{data.altselected}}" selectedItem="{{data.altentrada}}" attrForSelected="day">
           <template is="dom-repeat" items="{{items_array}}">
             <paper-item disabled="{{!item.enough}}" valor="{{item.day}}"><iron-icon icon="icons:{{getIcono(item.enough)}}" style="{{getEstilo(item.enough)}}" item-icon></iron-icon>{{item.day}}</paper-item>

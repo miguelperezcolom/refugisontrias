@@ -164,6 +164,7 @@ Botó: PAGAR RESERVA
                 notify: true,
             },
 
+
         },
 
         errorRecibido: function(e, error) {
@@ -174,6 +175,7 @@ Botó: PAGAR RESERVA
         respuestaRecibida: function(e, request) {
             if(request.succeeded) {
                 this.mensaje = 'la solicitud se resolvió correctamente con código ' + request.status
+                this.data.loc = '29384723947';
                 this.set('route.path', '/view4');
             } else {
                 this.mensaje = 'la solicitud nos ofreció resultados incorrectos, con código ' + request.status

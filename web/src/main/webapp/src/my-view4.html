@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             route: {
                 type: Object,
                 notify: true,
-            },
+            }
 
         },
 
@@ -81,9 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _submit: function(e) {
             //this.set('resp', 'Hola!!!!')  ;
             this.set('resp', JSON.stringify(this.data))  ;
-            //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
-            this.$.elajax.body = this.data;
-            this.$.elajax.generateRequest();
+            window.location = '/tpvlanzadera.jsp?bookingId=' + this.data.loc;
         },
 
     });

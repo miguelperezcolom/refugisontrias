@@ -4,7 +4,6 @@ import io.mateu.ui.core.client.app.AbstractApplication;
 import io.mateu.ui.core.client.app.AbstractArea;
 import io.mateu.ui.core.client.app.App;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +19,6 @@ public class RSTApp extends AbstractApplication {
 
     @Override
     public List<AbstractArea> getAreas() {
-        return Arrays.asList(new AdminArea("Admin"), new BookingArea("Booking"));
+        return Arrays.asList(new UniqueArea("All"));
     }
 }

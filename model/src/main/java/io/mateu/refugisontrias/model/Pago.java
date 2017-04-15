@@ -1,6 +1,6 @@
 package io.mateu.refugisontrias.model;
 
-import io.mateu.ui.mdd.server.annotations.Unmodifiable;
+import io.mateu.ui.mdd.server.annotations.*;
 import io.mateu.ui.mdd.server.interfaces.WithTriggers;
 import io.mateu.ui.mdd.server.util.Helper;
 import io.mateu.ui.mdd.server.util.JPATransaction;
@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Indelible
 public class Pago implements WithTriggers {
 
     @Id
@@ -24,34 +25,50 @@ public class Pago implements WithTriggers {
     private long id;
 
     @Embedded
+    @ListColumn(field = "created")
+    @SearchFilter(field = "created")
     private Auditoria auditoria;
 
 
     @ManyToOne
     @Unmodifiable
+    @SearchFilter(field = "id")
+    @ListColumn(field = "id")
     private Reserva reserva;
 
     @Unmodifiable
+    @SearchFilter
+    @ListColumn
+    private TipoPago tipo;
+
+
+    @Unmodifiable
+    @ListColumn
     private double importe;
+
+    @TextArea
+    @ListColumn
+    @Unmodifiable
+    private String concepto;
 
 
     @Override
-    public void beforeSet(boolean isNew) {
+    public void beforeSet(EntityManager em, boolean isNew) {
 
     }
 
     @Override
-    public void afterSet(boolean isNew) {
+    public void afterSet(EntityManager em, boolean isNew) {
         if (getReserva() != null) getReserva().totalizar();
     }
 
     @Override
-    public void beforeDelete() {
+    public void beforeDelete(EntityManager em) {
 
     }
 
     @Override
-    public void afterDelete() {
+    public void afterDelete(EntityManager em) {
         if (getReserva() != null) getReserva().totalizar();
     }
 }
