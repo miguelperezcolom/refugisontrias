@@ -41,7 +41,19 @@ We don't have availability, please choose the alternative date for check in and 
 -->
 
 
-      <iron-ajax auto url="http://refugibackoffice.mateu.io/servidor/entradas" body="{{data}}" content-type="application/json" method="POST" on-response="handleResponse" handleAs="json"></iron-ajax>
+      <iron-ajax
+              id="fechas"
+              auto
+              body="{{data}}"
+              url="http://refugibackoffice.mateu.io/servidor/entradas"
+              content-type="application/json"
+              method="POST"
+              on-response="handleResponse"
+              handle-as="json"
+      ></iron-ajax>
+
+
+
          <paper-listbox class="dropdown-content" id="gg" name="pax" label="Pax" required selected="{{data.altselected}}" selectedItem="{{data.altentrada}}" attrForSelected="day">
           <template is="dom-repeat" items="{{items_array}}">
             <paper-item disabled="{{!item.enough}}" valor="{{item.day}}"><iron-icon icon="icons:{{getIcono(item.enough)}}" style="{{getEstilo(item.enough)}}" item-icon></iron-icon>{{item.day}}</paper-item>
@@ -49,6 +61,7 @@ We don't have availability, please choose the alternative date for check in and 
         </paper-listbox>
 
       <br/>
+
       </form>
 
 <!--
@@ -79,7 +92,6 @@ We don't have availability, please choose the alternative date for check in and 
                 notify: true,
             },
 
-
         },
 
         getIcono: function(ok) {
@@ -100,6 +112,10 @@ We don't have availability, please choose the alternative date for check in and 
 
         },
 
+        attributeChanged: function() {
+            this.$.fechas.generateRequest();
+        },
+
         handleResponse: function(e, detail) {
             console.log(this.id + " responseHandler fired!\n");
             this.isBusy = false;
@@ -107,7 +123,8 @@ We don't have availability, please choose the alternative date for check in and 
             var grid = this.$.gg;
 
             this.set('items_array', detail.xhr.response);
-        }
+        },
+
     });
 
   </script>

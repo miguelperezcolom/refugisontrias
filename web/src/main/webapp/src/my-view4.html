@@ -31,6 +31,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         padding: 10px;
       }
+
+      #botonpago {
+        width: 100%;
+        text-align: center;
+        background-color: var(--app-primary-color);
+      }
     </style>
 
     <div class="card">
@@ -40,9 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Your reservation is done. Please note that your booking will remain unconfirmed until payment is done.<br>
 
 
-
-      <boton responsive><input type="button" on-click="_submit" value="PAGAR ARA / PAY NOW"></boton>
-
+      <boton id="botonpago" responsive></boton>
 
     </div>
   </template>
@@ -56,8 +60,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             data: {
                 type: Object,
                 notify: true,
+                observer: 'setbotonhtml'
             },
             cargando: Boolean,
+            botonVisible: Boolean,
             route: {
                 type: Object,
                 notify: true,
@@ -65,23 +71,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         },
 
-        errorRecibido: function(e, error) {
-            console.log(error.request); //ese es el iron-request de la solicitud
-            this.mensaje = 'Error en la solicitud, con código ' + error.request.status;
-        },
-
-        respuestaRecibida: function(e, request) {
-            if(request.succeeded) {
-                this.mensaje = 'la solicitud se resolvió correctamente con código ' + request.status
-            } else {
-                this.mensaje = 'la solicitud nos ofreció resultados incorrectos, con código ' + request.status
-            }
-        },
-
-        _submit: function(e) {
-            //this.set('resp', 'Hola!!!!')  ;
-            this.set('resp', JSON.stringify(this.data))  ;
-            window.location = '/tpvlanzadera.jsp?bookingId=' + this.data.loc;
+        setbotonhtml: function(newValue, oldValue) {
+            this.$.botonpago.innerHTML = newValue.paymentlink;
         },
 
     });

@@ -35,6 +35,13 @@ public class AdminModule extends AbstractModule {
                 }
             });
 
+            m.add(new AbstractAction("Monedas") {
+                @Override
+                public void run() {
+                    ((ERPServiceAsync) MateuUI.create(ERPService.class)).getMetaData("io.mateu.refugisontrias.model.Moneda", new MDDCallback());
+                }
+            });
+
             m.add(new AbstractAction("TPVs") {
                 @Override
                 public void run() {

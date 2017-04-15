@@ -11,12 +11,17 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.HtmlEmail;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMReader;
+import sis.redsys.api.ApiMacSha256;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -69,7 +74,7 @@ public class TPVTransaction {
         return h[0];
     }
 
-    public String getForm(EntityManager em, final String language, final long bookingId, final long transactionId, final double amount, final String currency, final String subject) throws NoSuchAlgorithmException {
+    public String getForm(EntityManager em, final String language, final long bookingId, final long transactionId, final double amount, final String currency, final String subject) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
 
         String Merchant_ConsumerLanguage;
         if ("es".equals(language)) Merchant_ConsumerLanguage = "001";
@@ -83,6 +88,31 @@ public class TPVTransaction {
         StringBuffer h = new StringBuffer();
 
         if (TPVTYPE.SERMEPA.equals(getTpv().getType())) {
+
+
+            ApiMacSha256 apiMacSha256 = new ApiMacSha256();
+
+            apiMacSha256.setParameter("DS_MERCHANT_AMOUNT", getMerchantAmount(amount));
+            apiMacSha256.setParameter("DS_MERCHANT_ORDER", "" + getId());
+            apiMacSha256.setParameter("DS_MERCHANT_MERCHANTCODE", getTpv().getMerchantCode());
+            apiMacSha256.setParameter("DS_MERCHANT_CURRENCY", getMerchantCurrency(em, currency));
+            apiMacSha256.setParameter("DS_MERCHANT_TRANSACTIONTYPE", "0");
+            apiMacSha256.setParameter("DS_MERCHANT_TERMINAL", getTpv().getMerchantTerminal());
+            apiMacSha256.setParameter("DS_MERCHANT_MERCHANTURL", getTpv().getNotificationUrl());
+            apiMacSha256.setParameter("DS_MERCHANT_URLOK", getTpv().getOkUrl());
+            apiMacSha256.setParameter("DS_MERCHANT_URLKO", getTpv().getKoUrl());
+
+            String params = apiMacSha256.createMerchantParameters();
+            String signature = apiMacSha256.createMerchantSignature(getTpv().getMerchantSecret());
+
+            h.append("<form name=f action='" + getTpv().getActionUrl() + "' method='post'>");
+            h.append("<input type='hidden' name=Ds_SignatureVersion value='HMAC_SHA256_V1' />");
+            h.append("<input type='hidden' name=Ds_MarchantParametersvalue='" + params + "' />");
+            h.append("<input type='hidden' name=Ds_Signature value='" + signature + "' />");
+            h.append("<input type='submit' value='Realizar Pago' />");
+            h.append("</form>");
+
+/*
             h.append("<form name=f action='" + getTpv().getActionUrl() + "' method='post'>");
             h.append("<input type='hidden' name=Ds_Merchant_MerchantName value='" + getTpv().getMerchantName() + "' />");
             h.append("<input type='hidden' name=Ds_Merchant_MerchantCode value='" + getTpv().getMerchantCode() + "' />");
@@ -98,6 +128,7 @@ public class TPVTransaction {
             h.append("<input type='hidden' name=Ds_Merchant_UrlKO value='" + getTpv().getKoUrl() + "' />");
             h.append("<input type='hidden' name=Ds_Merchant_ProductDescription value='" + subject + "' />");
             h.append("</form>");
+            */
         } else if (TPVTYPE.WEBPAY.equals(getTpv().getType())) {
             //MERCHANTNUMBER + | + OPERATION + | + ORDERNUMBER + | + AMOUNT + | + CURRENCY + | + DEPOSITFLAG + | + MERORDERNUM + | + URL + | + DESCRIPTION + | + MD
 
@@ -256,13 +287,37 @@ Para ambos protocolos:
     }
 
 
-    public String getBoton() {
-        return getBoton(getBooking().getId(), getAmount(), getCurrency());
+    public String getBoton(EntityManager em) throws Exception {
+        return getBoton(em, getBooking().getId(), getAmount(), getCurrency());
     }
 
-    public String getBoton(final long bookingId, final double amount, final String currency) {
+    public String getBoton(EntityManager em, final long bookingId, final double amount, final String currency) throws Exception {
         if (TPVTYPE.SERMEPA.equals(getTpv().getType()) || TPVTYPE.WEBPAY.equals(getTpv().getType())) {
-            return "<a href='/tpvlanzadera.jsp?idtransaccion=" + getId() + "'>PAY NOW</a>";
+            ApiMacSha256 apiMacSha256 = new ApiMacSha256();
+
+            apiMacSha256.setParameter("DS_MERCHANT_AMOUNT", getMerchantAmount(amount));
+            apiMacSha256.setParameter("DS_MERCHANT_ORDER", "" + getId());
+            apiMacSha256.setParameter("DS_MERCHANT_MERCHANTCODE", getTpv().getMerchantCode());
+            apiMacSha256.setParameter("DS_MERCHANT_CURRENCY", getMerchantCurrency(em, currency));
+            apiMacSha256.setParameter("DS_MERCHANT_TRANSACTIONTYPE", "0");
+            apiMacSha256.setParameter("DS_MERCHANT_TERMINAL", getTpv().getMerchantTerminal());
+            apiMacSha256.setParameter("DS_MERCHANT_MERCHANTURL", getTpv().getNotificationUrl());
+            apiMacSha256.setParameter("DS_MERCHANT_URLOK", getTpv().getOkUrl());
+            apiMacSha256.setParameter("DS_MERCHANT_URLKO", getTpv().getKoUrl());
+
+            String params = apiMacSha256.createMerchantParameters();
+            String signature = apiMacSha256.createMerchantSignature(getTpv().getMerchantSecret());
+
+            StringBuffer h = new StringBuffer();
+
+            h.append("<form name=f action='" + getTpv().getActionUrl() + "' method='post'>");
+            h.append("<input type='hidden' name=Ds_SignatureVersion value='HMAC_SHA256_V1' />");
+            h.append("<input type='hidden' name=Ds_MarchantParameters value='" + params + "' />");
+            h.append("<input type='hidden' name=Ds_Signature value='" + signature + "' />");
+            h.append("<input type='submit' value='PAY NOW' />");
+            h.append("</form>");
+
+            return h.toString();
         } else if (TPVTYPE.PAYPAL.equals(getTpv().getType())) {
             return "<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>"
                     + "<!-- Identify your business so that you can collect the payments. -->"
@@ -346,12 +401,12 @@ Para ambos protocolos:
             byte bCode[] = getTpv().getMerchantCode().getBytes();
             byte bCurrency[] = getMerchantCurrency(em, currency).getBytes();
             byte bTransactionType[] = getMerchantTransactionType().getBytes();
-            byte bMerchantURL[] = (getTpv().getNotificationUrl() + "?idtransaccion=" + bookingId).getBytes();
+            byte bMerchantURL[] = (getTpv().getNotificationUrl() + "?idtransaccion=" + getId()).getBytes();
             byte bMerchantURLOK[] = getTpv().getOkUrl().getBytes();
             byte bMerchantURLKO[] = getTpv().getKoUrl().getBytes();
             byte bPassword[] = getTpv().getMerchantSecret().getBytes();
 
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            MessageDigest sha = MessageDigest.getInstance("SHA-256");
             sha.update(bAmount);
             sha.update(bOrder);
             sha.update(bCode);
@@ -412,12 +467,14 @@ Para ambos protocolos:
             @Override
             public void run(EntityManager em) throws Exception {
 
-                String bookingId = request.getParameter("bookingId");
-                if (bookingId == null && request.getParameter("item_number") != null) {
-                    bookingId = request.getParameter("item_number");
+                String idtransaccion = request.getParameter("idtransaccion");
+                if (idtransaccion == null && request.getParameter("item_number") != null) {
+                    idtransaccion = request.getParameter("item_number");
                 }
 
-                Reserva r = em.find(Reserva.class, Long.parseLong(bookingId));
+
+                TPVTransaction t = em.find(TPVTransaction.class, Long.parseLong(idtransaccion));
+                Reserva r = t.getBooking();
                 r.getLog().add(new Log(Helper.toJson(request.getParameterMap())));
 
 
@@ -440,6 +497,7 @@ Para ambos protocolos:
 
 
                 if (ok) {
+                    t.setStatus(TPVTRANSACTIONSTATUS.OK);
                     if (TPVTYPE.WEBPAY.equals(r.getAlbergue().getTpv().getType())) {
                         String msg = "";
                         if (request.getParameter("PRCODE") != null) {
@@ -461,10 +519,11 @@ Para ambos protocolos:
                     r.getPagos().add(p = new Pago());
                     p.setAuditoria(new Auditoria());
                     p.setTipo(TipoPago.TPV);
-                    p.setImporte(10.01);
+                    p.setImporte(t.getAmount());
                     p.setReserva(r);
 
                 } else {
+                    t.setStatus(TPVTRANSACTIONSTATUS.ERROR);
                     if (TPVTYPE.WEBPAY.equals(r.getAlbergue().getTpv().getType())) {
                         String msg = "";
                         if (request.getParameter("PRCODE") != null) {

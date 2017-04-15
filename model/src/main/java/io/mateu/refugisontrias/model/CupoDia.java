@@ -23,7 +23,7 @@ public class CupoDia implements WithTriggers {
     private long id;
 
     @Unmodifiable
-    @ListColumn(ql="sql('to_char(?, ''YYYY-MM-DD Dy'')', x.fecha)")
+    @ListColumn(ql="sql('to_char(?, ''YYYY-MM-DD Dy'')', x.fecha)", order = true)
     @SearchFilter()
     private LocalDate fecha;
 

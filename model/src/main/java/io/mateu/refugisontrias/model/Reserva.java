@@ -15,6 +15,7 @@ import org.apache.commons.mail.HtmlEmail;
 import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class Reserva implements WithTriggers {
     private double importeSobreescrito;
 
     @StartsLine
-    @ListColumn
+    @ListColumn(order = true)
     @Required
     @SearchFilter
     private LocalDate entrada;
@@ -147,7 +148,7 @@ public class Reserva implements WithTriggers {
 
     public void totalizar() {
         int noches = 0;
-        if (getEntrada() != null && getSalida() != null) noches = new Long(DAYS.between(entrada, salida)).intValue() - 1;
+        if (getEntrada() != null && getSalida() != null) noches = new Long(DAYS.between(entrada, salida)).intValue();
         setNoches(noches);
 
         setTotalEstancia(getNoches() * (getCamas() * getPrecioCama() + getCampings() * getPrecioCamping()));
@@ -192,6 +193,7 @@ public class Reserva implements WithTriggers {
             getAlbergue().actualizarDisponibilidad();
         }
         totalizar();
+        if (getAuditoria() == null) setAuditoria(new Auditoria());
     }
 
     @Override
@@ -266,7 +268,7 @@ public class Reserva implements WithTriggers {
         email.setHostName(getAlbergue().getEmailHost());
         email.setSmtpPort(getAlbergue().getEmailPort());
         email.setAuthenticator(new DefaultAuthenticator(getAlbergue().getEmailUsuario(), getAlbergue().getEmailPassword()));
-        email.setSSLOnConnect(true);
+        //email.setSSLOnConnect(true);
         email.setFrom(getAlbergue().getEmailFrom());
         if (!Strings.isNullOrEmpty(getAlbergue().getEmailCC())) email.getCcAddresses().add(new InternetAddress(getAlbergue().getEmailCC()));
 
@@ -275,9 +277,12 @@ public class Reserva implements WithTriggers {
 
         switch (getEstado()) {
             case PENDIENTE:
-                if (DAYS.between(LocalDate.now(), getAuditoria().getCreated()) > 2) {
-                    asunto = "Booking expired";
-                    template = getAlbergue().getBookingExpiredEmailTemplate();
+                if (getAuditoria() != null && DAYS.between(getAuditoria().getCreated(), LocalDateTime.now()) > 2) {
+                    asunto = "Booking expiring";
+                    template = getAlbergue().getBookingExpriringEmailTemplate();
+                } else {
+                    asunto = "Booking payment pending";
+                    template = getAlbergue().getBookingDoneEmailTemplate();
                 }
                 break;
             case OK:
@@ -306,7 +311,7 @@ public class Reserva implements WithTriggers {
 
         m.put("id", getId());
         m.put("localizador", getLocalizador());
-        m.put("creada", getAuditoria().getCreated());
+        if (getAuditoria() != null) m.put("creada", getAuditoria().getCreated());
         m.put("albergue", getAlbergue().getNombre());
         m.put("estado", getEstado());
         m.put("entrada", getEntrada());

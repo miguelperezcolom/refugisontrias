@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         .container {
             position: absolute;
@@ -18,8 +17,8 @@
 </head>
 <body>
 <div class="container aviso">
-    <img src="images/ok.png">
-    <p>Payment confirmed. Thanks for trusting us.</p>
+    <img src="images/ko.png">
+    <p>We are sorry, but something went wrong. <%=(request.getParameter("msg") != null)?request.getParameter("msg"):""%></p>
 </div>
 </body>
 </html>

@@ -117,5 +117,28 @@
             <!--<scope>provided</scope>-->
         </dependency>
 
+
+        <dependency>
+            <groupId>io.mateu.sermepa</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mateu.sermepa</groupId>
+            <artifactId>bcprov</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mateu.sermepa</groupId>
+            <artifactId>codec</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mateu.sermepa</groupId>
+            <artifactId>json</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
     </dependencies>
 </project>

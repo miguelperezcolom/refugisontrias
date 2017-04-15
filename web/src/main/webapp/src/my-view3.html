@@ -175,7 +175,7 @@ Botó: PAGAR RESERVA
         respuestaRecibida: function(e, request) {
             if(request.succeeded) {
                 this.mensaje = 'la solicitud se resolvió correctamente con código ' + request.status
-                this.data.loc = '29384723947';
+                this.data.paymentlink = request.xhr.response.paymentlink;
                 this.set('route.path', '/view4');
             } else {
                 this.mensaje = 'la solicitud nos ofreció resultados incorrectos, con código ' + request.status

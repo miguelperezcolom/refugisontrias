@@ -40,9 +40,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
               <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
                 -->
-                <vaadin-date-picker name="checkin" id="d0" label="Checkin"  min="[[today]]"  max="2017-12-31" initial-position="[[today]]" required value="{{data.entrada}}">
+                <vaadin-date-picker name="checkin" id="d0" label="Checkin"  min="[[today]]"  max="2017-12-31" initial-position="[[today]]" required value="{{data.entrada}}" i18n="[[i18n]]">
                 </vaadin-date-picker>
-                <vaadin-date-picker name="checkout" id="d1" label="Checkout"  max="2017-12-31" required value="{{data.salida}}">
+                <vaadin-date-picker name="checkout" id="d1" label="Checkout"  max="2017-12-31" required value="{{data.salida}}" i18n="[[i18n]]">
                 </vaadin-date-picker>
                 <paper-input name="nights" id="n" label="Nights" disabled></paper-input>
 
@@ -98,6 +98,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         return new Date().toISOString().substring(0, 10);
                     }
                 },
+                i18n: {
+                    value: i18n_es
+                }
             },
 
             _submit: function (e) {

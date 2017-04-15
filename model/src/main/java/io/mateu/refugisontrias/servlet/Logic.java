@@ -115,12 +115,19 @@ public class Logic {
     public static String confirmar(Map<String, Object> m) throws Exception {
         LocalDate entrada = LocalDate.parse((String) m.get("entrada"), DateTimeFormatter.ISO_DATE);
         LocalDate salida = LocalDate.parse((String) m.get("salida"), DateTimeFormatter.ISO_DATE);
+        if (m.get("altcheckin") != null) {
+            long noches = DAYS.between(entrada, salida);
+            entrada = LocalDate.parse((String) m.get("altcheckin"), DateTimeFormatter.ISO_DATE);
+            salida = entrada.plusDays(noches);
+        }
         int uds = Integer.parseInt((String) m.get("pax"));
         int camas = ("bedroom".equals(m.get("que")))?uds:0;
         int campings = ("camping".equals(m.get("que")))?uds:0;
 
         Map<String, Object> r = new HashMap<>();
 
+        LocalDate finalEntrada = entrada;
+        LocalDate finalSalida = salida;
         Helper.transact(new JPATransaction() {
             @Override
             public void run(EntityManager em) throws Exception {
@@ -128,8 +135,8 @@ public class Logic {
                 b.setEstado(EstadoReserva.PENDIENTE);
                 b.setAlbergue(em.find(Albergue.class, 1l));
                 b.getAlbergue().getReservas().add(b);
-                b.setEntrada(entrada);
-                b.setSalida(salida);
+                b.setEntrada(finalEntrada);
+                b.setSalida(finalSalida);
                 b.setCamas(camas);
                 b.setCampings(campings);
                 b.setNombre((String) m.get("nombre"));
@@ -153,9 +160,18 @@ public class Logic {
                 em.persist(b);
                 em.flush();
 
+                b.afterSet(em, true);
+
+
                 TPVTransaction t = b.getTransaccionTPV(em);
                 if (t != null) {
-                    r.put("paymentlink", t.getBoton());
+                    r.put("paymentlink", t.getBoton(em));
+                }
+
+                try {
+                    b.enviarEmail();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
