@@ -54,21 +54,24 @@ Botó: PAGAR RESERVA
     -->
 
     <div class="card">
-        <h1>Tenim disponibilitat, pot reservar ara<br>
-        We have availability, you can reserve now</h1>
+        <h1>Dades de la reserva / Booking details</h1>
+        <h3>Tenim disponibilitat, pot reservar ara<br>
+        We have availability, you can reserve now</h3>
         <br>
-      <h1>Ompli les seves dades / Fill your data</h1>
+      <h3>Ompli les seves dades / Fill your data</h3>
 
       <div>{{data.resumen}}</div>
 
       <form is="iron-form" id="form" method="post" action="/form/handler">
 
       <paper-input  name="name" label="Nom / Name *" required value="{{data.nombre}}" pattern="[A-Za-z]*"  auto-validate="true"></paper-input>
-      <paper-input  name="surname" label="Cognom / Surname" required value="{{data.apellidos}}" ></paper-input>
-      <paper-input  name="dni" label="DNI / ID" required value="{{data.dni}}"></paper-input>
+            <paper-input  name="phone" label="Telèfon / Phone *" required value="{{data.phone}}" pattern="[0-9]*" error="Please only numbers"  auto-validate="true"></paper-input>
+
+<!--      <paper-input  name="surname" label="Cognom / Surname" required value="{{data.apellidos}}" ></paper-input>-->
+<!--      <paper-input  name="dni" label="DNI / ID" required value="{{data.dni}}"></paper-input>-->
       <paper-input  name="email" label="Email" required value="{{data.email}}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address" auto-validate="true"></paper-input>
-      <paper-input  name="phone" label="Telèfon / Phone *" required value="{{data.phone}}" pattern="[0-9]*" error="Please only numbers"  auto-validate="true"></paper-input>
-      <paper-input  name="country" label="País / Country" required value="{{data.pais}}"></paper-input>
+      <paper-input  name="email" label="Repetir / repeat e-mail" required value="{{data.email}}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address" auto-validate="true"></paper-input>
+<!--      <paper-input  name="country" label="País / Country" required value="{{data.pais}}"></paper-input>-->
       <paper-dropdown-menu name="bedsheets" label="Habitació / Bedroom" value="{{data.sabanas}}">
         <paper-listbox class="dropdown-content">
           <paper-item>Bring sleeping bag</paper-item>
