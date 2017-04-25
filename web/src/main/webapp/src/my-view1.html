@@ -31,7 +31,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 padding: 10px;
             }
         </style>
-
+        <h1>Sol·licitud de reserva<br>
+Booking request</h1>
+        
+        <h3>Seleccioneu les dates de la vostra estada al refugi per reservar
+Select dates of stay at the shelter to reserve</h3>
         <div class="card">
 
             <form is="iron-form" id="form" method="post" action="/form/handler">
@@ -40,29 +44,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
               <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
                 -->
-                <vaadin-date-picker name="checkin" id="d0" label="Checkin"  min="[[today]]"  max="2017-12-31" initial-position="[[today]]" required value="{{data.entrada}}" i18n="[[i18n]]">
+                <vaadin-date-picker name="checkin" id="d0" label="Arribada / Check in (open at 16h until 22h)"  min="[[today]]"  max="2017-12-31" initial-position="[[today]]" required value="{{data.entrada}}" i18n="[[i18n]]">
                 </vaadin-date-picker>
-                <vaadin-date-picker name="checkout" id="d1" label="Checkout"  max="2017-12-31" required value="{{data.salida}}" i18n="[[i18n]]">
+                <vaadin-date-picker name="checkout" id="d1" label="Sortida / Check out"  max="2017-12-31" required value="{{data.salida}}" i18n="[[i18n]]">
                 </vaadin-date-picker>
-                <paper-input name="nights" id="n" label="Nights" disabled></paper-input>
-
-
-                <paper-dropdown-menu name="pax" label="Pax" required value="{{data.pax}}">
+                <div>
+                <paper-input name="nights" id="n" label="Nits / Nights" disabled ></paper-input>
+                <paper-dropdown-menu name="pax" label="Persones / Guests" required value="{{data.pax}}">
                     <paper-listbox class="dropdown-content" id="gg">
                         <template is="dom-repeat" items="{{items_array}}">
                             <paper-item value="{{item-value}}">{{item.text}}</paper-item>
                         </template>
                     </paper-listbox>
                 </paper-dropdown-menu>
-
+                </div>
                 <br/>
                 <paper-radio-group name="allotment" attr-for-selected="value" fallback-selection="other" selected="{{data.que}}">
-                    <paper-radio-button name="allotment" value="bedroom">Bedroom</paper-radio-button>
+                    <paper-radio-button name="allotment" value="bedroom">Habitació/Bedroom</paper-radio-button>
                     <paper-radio-button name="allotment" value="camping">Camping</paper-radio-button>
                 </paper-radio-group>
 
                 <br/>
-
+                <h3>
+          Per a reserves de grups escolars, excursionistes, escoltes o désplai, contactau per teléfon: +34 656 23 23 63.<br>
+          o al correu: <a href="mailto:reserves@refugisontrias.com ">reserves@refugisontrias.com</a></h3>
                 <boton responsive><input type="button" on-click="_submit" value="CONSULTAR / SEARCH"></boton>
 
             </form>
