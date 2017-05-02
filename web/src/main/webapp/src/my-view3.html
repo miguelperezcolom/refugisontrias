@@ -14,10 +14,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
-
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
@@ -28,10 +28,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles boton">
       :host {
         display: block;
-
         padding: 10px;
+
+      }
+
+      .widgetAuto {
+          display: block;
+          min-width: 400px;
+          border-radius: 2px;
+          padding: 16px 16px 16px 16px;
+          background: white;
+          height: auto;
+          margin: 15px 0;
+      }
+
+      .center {
+          margin: auto;
+      }
+
+      .row::after {
+          content: "";
+          clear: both;
+          display: table;
+      }
+      [class*="col-"] {
+          float: left;
+          padding: 15px;
+      }
+      .col-1 {width: 8.33%;}
+      .col-2 {width: 16.66%;}
+      .col-3 {width: 25%;}
+      .col-4 {width: 33.33%;}
+      .col-5 {width: 41.66%;}
+      .col-6 {width: 50%;}
+      .col-7 {width: 58.33%;}
+      .col-8 {width: 66.66%;}
+      .col-9 {width: 75%;}
+      .col-10 {width: 83.33%;}
+      .col-11 {width: 91.66%;}
+      .col-12 {width: 100%;}
+
+
+      paper-dropdown-menu {
+          width: 100%;
+      }
+
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+
+      tr:nth-child(even) {
+          background-color: #dddddd;
       }
     </style>
+
+
 
     <!--
 EXEMPLE DE DADES
@@ -52,8 +111,8 @@ A PAGAR ARA = 70,00€
 A PAGAR EN ARRIBAR AL REFUGI = 106,00€
 Botó: PAGAR RESERVA
     -->
-
-    <div class="card">
+      <div class="center">
+    <div class="card widgetAuto col-3">
         <h1>Dades de la reserva / Booking details</h1>
         <h3>Tenim disponibilitat, pot reservar ara<br>
         We have availability, you can reserve now</h3>
@@ -63,8 +122,8 @@ Botó: PAGAR RESERVA
       <div>{{data.resumen}}</div>
 
       <form is="iron-form" id="form" method="post" action="/form/handler">
-
       <paper-input  name="name" label="Nom / Name *" required value="{{data.nombre}}" pattern="[A-Za-z]*"  auto-validate="true"></paper-input>
+          <paper-input  name="name" label="Llinatges / Surname *" required value="{{data.nombre}}" pattern="[A-Za-z]*"  auto-validate="true"></paper-input>
             <paper-input  name="phone" label="Telèfon / Phone *" required value="{{data.phone}}" pattern="[0-9]*" error="Please only numbers"  auto-validate="true"></paper-input>
 
 <!--      <paper-input  name="surname" label="Cognom / Surname" required value="{{data.apellidos}}" ></paper-input>-->
@@ -72,83 +131,153 @@ Botó: PAGAR RESERVA
       <paper-input  name="email" label="Email" required value="{{data.email}}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address" auto-validate="true"></paper-input>
       <paper-input  name="email" label="Repetir / repeat e-mail" required value="{{data.email}}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address" auto-validate="true"></paper-input>
 <!--      <paper-input  name="country" label="País / Country" required value="{{data.pais}}"></paper-input>-->
-      <paper-dropdown-menu name="bedsheets" label="Habitació / Bedroom" value="{{data.sabanas}}">
-        <paper-listbox class="dropdown-content">
-          <paper-item>Bring sleeping bag</paper-item>
-          <paper-listbox class="dropdown-content">
-            <paper-item>1</paper-item>
-            <paper-item>2</paper-item>
-            <paper-item>3</paper-item>
-            <paper-item>4</paper-item>
-            <paper-item>5</paper-item>
-            <paper-item>6</paper-item>
-            <paper-item>7</paper-item>
-            <paper-item>8</paper-item>
-            <paper-item>9</paper-item>
-            <paper-item>10</paper-item>
-            <paper-item>11</paper-item>
-            <paper-item>12</paper-item>
-            <paper-item>13</paper-item>
-            <paper-item>14</paper-item>
-            <paper-item>15</paper-item>
-            <paper-item>16</paper-item>
-          </paper-listbox>
-        </paper-listbox>
-      </paper-dropdown-menu>
-      <br/>
-      <paper-dropdown-menu name="usekitchen" label="Cuina / kitchen" value="{{data.cocinas}}">
-        <paper-listbox class="dropdown-content">
-          <paper-item>No use kitchen</paper-item>
-          <paper-listbox class="dropdown-content">
-            <paper-item>1</paper-item>
-            <paper-item>2</paper-item>
-            <paper-item>3</paper-item>
-            <paper-item>4</paper-item>
-            <paper-item>5</paper-item>
-            <paper-item>6</paper-item>
-            <paper-item>7</paper-item>
-            <paper-item>8</paper-item>
-            <paper-item>9</paper-item>
-            <paper-item>10</paper-item>
-            <paper-item>11</paper-item>
-            <paper-item>12</paper-item>
-            <paper-item>13</paper-item>
-            <paper-item>14</paper-item>
-            <paper-item>15</paper-item>
-            <paper-item>16</paper-item>
-          </paper-listbox>
-        </paper-listbox>
-      </paper-dropdown-menu>
-      <br/>
-      <paper-textarea label="Hora aproximada d'arribada / Estimated arrival time / others" name="comments" value="{{data.comentarios}}"></paper-textarea>
-
-
-      </form>
-
-
-      <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
-
-      <div class="output">{{resp}}</div>
-
-      <div class="output">{{mensaje}}</div>
-
-
-      <boton responsive><input type="button" on-click="_submit" value="RESERVAR / BOOKING"></boton>
-
-      <iron-request id="xhr"></iron-request>
-
-      <iron-ajax
-              id="elajax"
-              url="http://refugibackoffice.mateu.io/servidor/confirmar"
-              handle-as="json"
-              loading="{{cargando}}"
-              method="POST"
-              content-type="application/json"
-              on-response="respuestaRecibida"
-              on-error="errorRecibido"
-      ></iron-ajax>
+          <paper-dropdown-menu name="bedsheets" label="Hora aproximada d' arribada / Estimated arival time" value="{{data.sabanas}}">
+              <paper-listbox class="dropdown-content">
+                  <paper-item>Time</paper-item>
+                  <paper-listbox class="dropdown-content">
+                      <paper-item>8:00</paper-item>
+                      <paper-item>9:00</paper-item>
+                      <paper-item>10:00</paper-item>
+                      <paper-item>11:00</paper-item>
+                      <paper-item>12:00</paper-item>
+                      <paper-item>13:00</paper-item>
+                      <paper-item>14:00</paper-item>
+                      <paper-item>15:00</paper-item>
+                      <paper-item>16:00</paper-item>
+                      <paper-item>17:00</paper-item>
+                      <paper-item>18:00</paper-item>
+                      <paper-item>19:00</paper-item>
+                      <paper-item>20:00</paper-item>
+                      <paper-item>21:00</paper-item>
+                      <paper-item>22:00</paper-item>
+                      <paper-item>23:00</paper-item>
+                  </paper-listbox>
+              </paper-listbox>
+          </paper-dropdown-menu>
+          <br/>
+          <paper-textarea label="Altres /Others" name="comments" value="{{data.comentarios}}"></paper-textarea>
 
     </div>
+          <div class="card widgetAuto col-3">
+              <paper-dropdown-menu name="bedsheets" label="Habitació / Bedroom" value="{{data.sabanas}}">
+                  <paper-listbox class="dropdown-content">
+                      <paper-item>Bring sleeping bag</paper-item>
+                      <paper-listbox class="dropdown-content">
+                          <paper-item>1</paper-item>
+                          <paper-item>2</paper-item>
+                          <paper-item>3</paper-item>
+                          <paper-item>4</paper-item>
+                          <paper-item>5</paper-item>
+                          <paper-item>6</paper-item>
+                          <paper-item>7</paper-item>
+                          <paper-item>8</paper-item>
+                          <paper-item>9</paper-item>
+                          <paper-item>10</paper-item>
+                          <paper-item>11</paper-item>
+                          <paper-item>12</paper-item>
+                          <paper-item>13</paper-item>
+                          <paper-item>14</paper-item>
+                          <paper-item>15</paper-item>
+                          <paper-item>16</paper-item>
+                      </paper-listbox>
+                  </paper-listbox>
+              </paper-dropdown-menu>
+              <br/>
+              <paper-dropdown-menu name="usekitchen" label="Cuina / kitchen" value="{{data.cocinas}}">
+                  <paper-listbox class="dropdown-content">
+                      <paper-item>No use kitchen</paper-item>
+                      <paper-listbox class="dropdown-content">
+                          <paper-item>1</paper-item>
+                          <paper-item>2</paper-item>
+                          <paper-item>3</paper-item>
+                          <paper-item>4</paper-item>
+                          <paper-item>5</paper-item>
+                          <paper-item>6</paper-item>
+                          <paper-item>7</paper-item>
+                          <paper-item>8</paper-item>
+                          <paper-item>9</paper-item>
+                          <paper-item>10</paper-item>
+                          <paper-item>11</paper-item>
+                          <paper-item>12</paper-item>
+                          <paper-item>13</paper-item>
+                          <paper-item>14</paper-item>
+                          <paper-item>15</paper-item>
+                          <paper-item>16</paper-item>
+                      </paper-listbox>
+                  </paper-listbox>
+              </paper-dropdown-menu>
+              <br/>
+              <h3>Preu total RESERVA / Total price of booking </h3>
+              <h3> 30.00 €</h3>
+              <paper-button raised class="indigo">Pagar ara / Pay Now</paper-button>
+
+              <br/>
+              <h3>Pagar en efectiu / Rest of booking by cash</h3>
+              <h3> 60.00 €</h3>
+
+<br>
+              <table>
+                  <tr>
+                      <td>Arribada /Check in</td>
+                      <td>27/08/2017</td>
+                  </tr>
+                  <tr>
+                      <td>Nits / Nights</td>
+                      <td>2</td>
+                  </tr>
+                  <tr>
+                      <td>Habitació / Bedroom</td>
+                      <td>Yes</td>
+                  </tr>
+              </table>
+              <br>
+              <table>
+                  <tr>
+                      <td>Sortida / Check Out</td>
+                      <td>27/08/2017</td>
+                  </tr>
+                  <tr>
+                      <td>Persones / Guests</td>
+                      <td>2</td>
+                  </tr>
+                  <tr>
+                      <td>Camping</td>
+                      <td>Not</td>
+                  </tr>
+                  <tr>
+                      <td>Ecotaxa</td>
+                      <td>0,50 €</td>
+                  </tr>
+              </table>
+
+              <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
+
+              <div class="output">{{resp}}</div>
+
+              <div class="output">{{mensaje}}</div>
+
+
+              <boton responsive><input type="button" on-click="_submit" value="RESERVAR / BOOKING"></boton>
+
+              <iron-request id="xhr"></iron-request>
+
+              <iron-ajax
+                      id="elajax"
+                      url="http://refugibackoffice.mateu.io/servidor/confirmar"
+                      handle-as="json"
+                      loading="{{cargando}}"
+                      method="POST"
+                      content-type="application/json"
+                      on-response="respuestaRecibida"
+                      on-error="errorRecibido"
+              ></iron-ajax>
+
+
+              </form>
+
+          </div>
+      </div>
+
   </template>
 
   <script>
@@ -190,7 +319,6 @@ Botó: PAGAR RESERVA
             //this.set('resp', JSON.stringify(this.data))  ;
             //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
             if (this.$.form.validate()) {
-
                 this.$.elajax.body = this.data;
                 this.$.elajax.generateRequest();
 

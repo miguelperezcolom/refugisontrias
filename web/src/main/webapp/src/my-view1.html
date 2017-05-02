@@ -30,14 +30,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 padding: 10px;
             }
+            .center {
+                margin: auto;
+            }
            
         </style>
         <h1>Sol·licitud de reserva<br>
 Booking request</h1>
-        
+
         <h3>Seleccioneu les dates de la vostra estada al refugi per reservar
-Select dates of stay at the shelter to reserve</h3>
-        <div class="card horizontal layout center" >
+            Select dates of stay at the shelter to reserve</h3>
+        <div class="card center" >
 
             <form is="iron-form" id="form" method="post" action="/form/handler">
 
@@ -73,7 +76,6 @@ Select dates of stay at the shelter to reserve</h3>
 
             </form>
         </div>
-
 
         <iron-ajax auto url="http://refugibackoffice.mateu.io/servidor/combopax" on-response="handleResponse" handleAs="json"></iron-ajax>
         <iron-ajax id="dispo" url="http://refugibackoffice.mateu.io/servidor/checkdispo" on-response="handledispo" handleAs="json" method="POST"></iron-ajax>
