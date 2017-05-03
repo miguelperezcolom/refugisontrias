@@ -32,18 +32,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }
 
-      .widgetAuto {
-          display: block;
-          min-width: 400px;
-          border-radius: 2px;
-          padding: 16px 16px 16px 16px;
-          background: white;
-          height: auto;
-          margin: 15px 0;
-      }
-
-      .center {
-          margin: auto;
+      .flex-center-justified {
+          @apply(--layout-horizontal);
+          @apply(--layout-center-justified);
       }
 
       .row::after {
@@ -111,8 +102,8 @@ A PAGAR ARA = 70,00€
 A PAGAR EN ARRIBAR AL REFUGI = 106,00€
 Botó: PAGAR RESERVA
     -->
-      <div class="center">
-    <div class="card widgetAuto col-3">
+      <div class="container flex-center-justified">
+          <div class="card widgetAuto col-3">
         <h1>Dades de la reserva / Booking details</h1>
         <h3>Tenim disponibilitat, pot reservar ara<br>
         We have availability, you can reserve now</h3>
