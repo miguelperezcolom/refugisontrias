@@ -1,0 +1,240 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+
+<link rel="import" href="boton.html">
+
+<dom-module id="my-view5">
+    <template>
+        <style include="shared-styles boton">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+
+            .center {
+                margin: auto;
+            }
+
+        </style>
+        <h1>Buscar reserva<br>
+            Booking search</h1>
+
+        <h3>Indica la data d'arribada i el nom <br>
+            Indicates the date of arrival and the name</h3>
+        <div class="container flex-center-justified">
+            <div class="card">
+
+                <form is="iron-form" id="form" method="post" action="/form/handler">
+
+                    <!--
+                  <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
+                  <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
+                    -->
+                    <paper-input id="name" name="name" label="Name" required value="{{data.nombre}}"></paper-input>
+                    <vaadin-date-picker name="checkin" id="d0" label="Arribada / Check in (open at 16h until 22h)"
+                                        min="[[today]]" max="2017-12-31" initial-position="[[today]]" required
+                                        value="{{data.entrada}}" i18n="[[i18n]]">
+                    </vaadin-date-picker>
+
+                    <br>
+
+                    <br/>
+                    <h3>
+                        Per a reserves de grups escolars, excursionistes, escoltes o désplai, contactau per teléfon: +34
+                        656 23 23 63.<br>
+                        o al correu: <a href="mailto:reserves@refugisontrias.com ">reserves@refugisontrias.com</a></h3>
+                    <boton responsive><input type="button" on-click="_submit" value="CONSULTAR / SEARCH"></boton>
+
+                </form>
+            </div>
+
+
+
+
+            <div class="card">
+                <br/>
+                <h3>Preu total RESERVA / Total price of booking </h3>
+                <h3> 30.00 €</h3>
+                <paper-button raised class="indigo">Pagar ara / Pay Now</paper-button>
+
+                <br/>
+                <h3>Pagar en efectiu / Rest of booking by cash</h3>
+                <h3> 60.00 €</h3>
+
+                <br>
+                <table>
+                    <tr>
+                        <td>Arribada /Check in</td>
+                        <td>27/08/2017</td>
+                    </tr>
+                    <tr>
+                        <td>Nits / Nights</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>Habitació / Bedroom</td>
+                        <td>Yes</td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <td>Sortida / Check Out</td>
+                        <td>27/08/2017</td>
+                    </tr>
+                    <tr>
+                        <td>Persones / Guests</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>Camping</td>
+                        <td>Not</td>
+                    </tr>
+                    <tr>
+                        <td>Ecotaxa</td>
+                        <td>0,50 €</td>
+                    </tr>
+                </table>
+                <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
+                <div class="output">{{resp}}</div>
+                <div class="output">{{mensaje}}</div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <!--<iron-ajax auto url="http://refugibackoffice.mateu.io/servidor/combopax" on-response="handleResponse"-->
+        <!--handleAs="json"></iron-ajax>-->
+        <iron-ajax id="dispo" url="http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=1493730866128" on-response="handledispo"
+                   handleAs="json" method="GET"></iron-ajax>
+        <!--ok http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=TIH0000742T-->
+        <!--No existe aun http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=1493730866128-->
+        <!--No se encuentra http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=estanolaencuentra-->
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-view5',
+
+            properties: {
+                user: Object,
+                data: {
+                    type: Object,
+                    notify: true,
+                    value: {que: 'bedroom',},
+                },
+                page: {
+                    type: String,
+                    notify: true,
+                },
+                route: {
+                    type: Object,
+                    notify: true,
+                },
+                today: {
+                    //include today date to the attr today
+                    value: function () {
+                        return new Date().toISOString().substring(0, 10);
+                    }
+                },
+                i18n: {
+                    value: i18n_es
+                }
+            },
+
+            _submit: function (e) {
+                if (this.$.form.validate()) {
+
+                    //this.set('resp', JSON.stringify(this.data))  ;
+                    //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
+                    this.$.dispo.body = JSON.stringify(this.data);
+                    this.$.dispo.generateRequest();
+
+                }
+            },
+
+            handleResponse: function (e, detail) {
+                console.log(this.id + " responseHandler fired!\n");
+                this.isBusy = false;
+
+                this.set('items_array', detail.xhr.response);
+            },
+
+            handledispo: function (e, detail) {
+                //this.set('items_array', detail.xhr.response);
+                if (detail.xhr.response.result == "ok") {
+                    this.set("data.service", detail.xhr.response.service);
+//                    this.set('route.path', '/view3');
+                    console.log("OK answer");
+                } else {
+                    console.log("Error in answer");
+                    console.log("response=" + detail.xhr.response.result);
+                    console.log("response=" + detail.xhr.response.message);
+
+                }
+//                    this.set('route.path', '/view2');
+            },
+
+            ready: function () {
+                //this.$.name.textContent = this.tagName;
+
+                var d0 = this.$.d0;
+                var name = this.$.name;
+                //		document.querySelector('vaadin-date-picker').set('i18n.firstDayOfWeek', 1);//SET MONDAY FIRST DATE OF WEEK
+
+                d0.addEventListener('value-changed', function () {
+                    if (d0.hasValue) {
+                        /*
+                         console.log("Set D1 with min D0 value"); 
+                         console.log("D0 value " + d0.value); 
+                         */
+                        //d1.setAttribute("min", d0.value);
+                        //d1.setAttribute("initial-position", d0.value);
+                    }
+                    if (d0.hasValue) {
+                        console.log("d0=" + d0.value);
+                    }
+                });
+                name.addEventListener('value-changed', function () {
+                    if (name.hasValue ) {
+                        console.log("name=" + name.value);
+                    }
+                });
+
+            }
+        });
+
+//        function daysBetween(one, another) {
+//            return Math.round(Math.abs((+one) - (+another)) / 8.64e7);
+//        }
+
+    </script>
+</dom-module>
