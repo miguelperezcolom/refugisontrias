@@ -27,13 +27,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template>
         <style include="shared-styles boton">
             :host {
-                display: block;
+                display: inline-block;
 
                 padding: 10px;
             }
 
+
             paper-dropdown-menu {
-                width: 100%;
+                width: 90%;
             }
 
             table {
@@ -55,6 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             .card {
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
             }
+
         </style>
 
 
@@ -79,7 +81,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         -->
         <div class="container flex-center-justified">
 
-
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div class="card">
                     <h1>Dades de la reserva / Booking details</h1>
@@ -89,7 +90,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <h3>Ompli les seves dades / Fill your data</h3>
 
                     <div>{{data.resumen}}</div>
-                    <paper-input name="name" label="Nom / Name *" required value="{{data.nombre}}" pattern="[A-Za-z]*"
+                    <paper-input class="fuente" name="name" label="Nom / Name *" required value="{{data.nombre}}"
+                                 pattern="[A-Za-z]*"
                                  auto-validate="true"></paper-input>
                     <paper-input name="name" label="Llinatges / Surname *" required value="{{data.apellido}}"
                                  pattern="[A-Za-z]*" auto-validate="true"></paper-input>
