@@ -55,24 +55,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 display: none;
             }
         </style>
-        <h1>Buscar reserva<br>
-            Booking search</h1>
 
-        <h3>Indica la data d'arribada i el nom <br>
-            Indicates the date of arrival and the name</h3>
         <div class="container flex-center-justified">
             <div class="card">
+                <h1>Buscar reserva<br>
+                    Booking search</h1>
 
+                <h3>Indica la data d'arribada i el nom <br>
+                    Indicates the date of arrival and the name</h3>
                 <form is="iron-form" id="form" method="post" action="/form/handler">
 
                     <!--
                   <paper-input name="name" label="Name" required value="{{data.nombre}}"></paper-input>
                   <paper-input name="edede" label="dede" required value="{{data.nombre}}"></paper-input>
                     -->
-                    <paper-input id="name" name="name" label="Name or Reservation" required value="{{nombre}}"></paper-input>
+                    <paper-input id="name" name="name" label="Name or Reservation" required
+                                 value="{{nombre}}"></paper-input>
                     <vaadin-date-picker name="checkin" id="d0" label="Arribada / Check in (open at 16h until 22h)"
                                         min="[[today]]" max="2017-12-31" initial-position="[[today]]" required
-                                        value="{{data.entrada}}" i18n="[[i18n]]">
+                                        value="{{data.entrada}}" i18n="[[i18n]]" hidden>
                     </vaadin-date-picker>
 
                     <br>
@@ -85,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <iron-ajax id="dispo"
                                url="http://viajesibiza.mateu.io/resources/pickupconfirmation/q?"
                                on-response="handledispo"
-                               params = '{"p":"TIH0000742T"}'
+                               params='{"p":"TIH0000742T"}'
                                handleAs="json"
                                method="GET"></iron-ajax>
                     <!--ok http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=TIH0000742T-->
@@ -94,30 +95,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <boton responsive><input type="button" on-click="_submit" value="CONSULTAR / SEARCH"></boton>
 
                 </form>
+
+
+                <div id="respuesta" class="card widgetAuto col-3 respuesta">
+                    <h2 style="color: red; font-style: oblique">{{errorMessage}} </h2>
+                    <template is="dom-repeat" items="[[_toArray(answer)]]">
+                        <span style="color:#71a83b">{{item.key}}</span>
+                        <br><span style="color:black">{{item.value}}</span>
+                        <br>
+                        <hr>
+                    </template>
+                    <br> <br> <br>
+                </div>
             </div>
+            <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
 
-
+            <!--<iron-ajax auto url="http://refugibackoffice.mateu.io/servidor/combopax" on-response="handleResponse"-->
+            <!--handleAs="json"></iron-ajax>-->
+            <!--params='{"p":"{{data.nombre}}"}'-->
         </div>
-
-
-        </div>
-        <div id="respuesta" class="card widgetAuto col-3 respuesta" >
-            <h3>{{errorMessage}} </h3>
-            <template is="dom-repeat" items="[[_toArray(answer)]]">
-                <span style="color:#71a83b">{{item.key}}</span>
-                <br><span style="color:black">{{item.value}}</span>
-                <br>
-                <hr>
-            </template>
-            <br> <br> <br>
-
-        </div>
-        <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
-
-        <!--<iron-ajax auto url="http://refugibackoffice.mateu.io/servidor/combopax" on-response="handleResponse"-->
-        <!--handleAs="json"></iron-ajax>-->
-        <!--params='{"p":"{{data.nombre}}"}'-->
-
 
     </template>
 
@@ -182,8 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 }
             },
-            _getParams: function()
-            {
+            _getParams: function () {
                 return ('{"p":"' + this.nombre + '"}');
             },
 

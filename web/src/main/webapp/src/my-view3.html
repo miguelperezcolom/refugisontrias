@@ -11,30 +11,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-
 <link rel="import" href="boton.html">
 
 <dom-module id="my-view3">
     <template>
         <style include="shared-styles boton">
             :host {
-                display: inline-block;
-
+                display: block;
                 padding: 10px;
             }
 
-
             paper-dropdown-menu {
-                width: 90%;
+                width: 98%;
             }
 
             table {
@@ -46,7 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             td, th {
                 border: 1px solid #dddddd;
                 text-align: left;
-                padding: 8px;
             }
 
             tr:nth-child(even) {
@@ -56,33 +53,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             .card {
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
             }
-
         </style>
 
-
-        <!--
-    EXEMPLE DE DADES
-    Dades de la reserva
-    Nom* JAUME Llinatges* TRIAS DNI 43080999V correu @* JO@TU.COM Telèfon* 620159620
-    País* ESPANYA Hora d'arribada* 18:30H
-    Data IN 01/11/16 Data OUT 02/11/16 PAX 10 NITS 1 HABITACIÓ SI
-    Preu PAX/NIT ALLOTJAMENT = 14,00€
-    Preu TOTAL allotjament = 140,00€
-    EXTRES de la reserva
-    AQUESTS SERVEIS EXTRES ES PAGUEN EN ARRIBAR AL REFUGI
-    Dret a cuina = 14 persones (28,00€)
-    Llençols = 2 llençolS (6,00€)
-    Tavalloles = 2 tavalloles (2,00€)
-    Preu TOTAL EXTRES = 36,00€
-    Preu total RESERVA = 176,00€
-    A PAGAR ARA = 70,00€
-    A PAGAR EN ARRIBAR AL REFUGI = 106,00€
-    Botó: PAGAR RESERVA
-        -->
         <div class="container flex-center-justified">
 
-            <form is="iron-form" id="form" method="post" action="/form/handler">
-                <div class="card">
+
+            <div class="card">
+
+                <form is="iron-form" id="form" method="post" action="/form/handler">
+
+
                     <h1>Dades de la reserva / Booking details</h1>
                     <h3>Tenim disponibilitat, pot reservar ara<br>
                         We have availability, you can reserve now</h3>
@@ -90,6 +70,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <h3>Ompli les seves dades / Fill your data</h3>
 
                     <div>{{data.resumen}}</div>
+
+
                     <paper-input class="fuente" name="name" label="Nom / Name *" required value="{{data.nombre}}"
                                  pattern="[A-Za-z]*"
                                  auto-validate="true"></paper-input>
@@ -135,8 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-textarea label="Altres /Others" name="comments"
                                     value="{{data.comentarios}}"></paper-textarea>
 
-                    <!--</div>-->
-                    <!--<div class="card">-->
 
                     <br/>
                     <paper-dropdown-menu name="usekitchen" label="Cuina / kitchen" value="{{data.cocinas}}">
@@ -281,12 +261,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             on-error="errorRecibido"
                     ></iron-ajax>
 
-                </div>
-            </form>
+                </form>
+            </div>
 
 
         </div>
-
     </template>
 
     <script>
@@ -337,3 +316,4 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
     </script>
 </dom-module>
+
