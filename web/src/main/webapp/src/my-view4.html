@@ -24,60 +24,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="boton.html">
 
 <dom-module id="my-view4">
-  <template>
-    <style include="shared-styles boton">
-      :host {
-        display: block;
+    <template>
+        <style include="shared-styles boton">
+            :host {
+                display: block;
 
-        padding: 10px;
-      }
-      .center {
-          margin: auto;
-      }
-
-      #botonpago {
-        width: 100%;
-        text-align: center;
-        background-color: var(--app-primary-color);
-      }
-    </style>
-
-    <div class="card center">
-        
-        <h1>La teva reserva / Your booking</h1>
-
-        <h4>Heu fet una sol·licitud de reserva al Refugi de son Trias a Esporles. Recordau que la reserva no es efectiva fins que no s'ha comprovat que esta paga</h4>
-
-
-<boton  responsive><input type="button" id="botonpago" value="PAGAR ARA / PAY NOW"><input type="button" value="NO PAGAR ENCARA / NOT YET"></boton>
-
-    </div>
-  </template>
-
-  <script>
-    Polymer({
-      is: 'my-view4',
-
-        properties: {
-            user: Object,
-            data: {
-                type: Object,
-                notify: true,
-                observer: 'setbotonhtml'
-            },
-            cargando: Boolean,
-            botonVisible: Boolean,
-            route: {
-                type: Object,
-                notify: true,
+                padding: 10px;
             }
 
-        },
+            .center {
+                margin: auto;
+            }
 
-        setbotonhtml: function(newValue, oldValue) {
-            this.$.botonpago.innerHTML = newValue.paymentlink;
-        },
+            #botonpago {
+                width: 100%;
+                text-align: center;
+                background-color: var(--app-primary-color);
+            }
+        </style>
+        <div class="container flex-center-justified">
+            <div class="card">
 
-    });
-  </script>
+                <h1>La teva reserva / Your booking</h1>
+
+                <h4>Heu fet una sol·licitud de reserva al Refugi de son Trias a Esporles. Recordau que la reserva no es
+                    efectiva fins que no s'ha comprovat que esta paga</h4>
+
+
+                <boton responsive><input type="button" id="botonpago" value="PAGAR ARA / PAY NOW"><input type="button"
+                                                                                                         value="NO PAGAR ENCARA / NOT YET">
+                </boton>
+
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-view4',
+
+            properties: {
+                user: Object,
+                data: {
+                    type: Object,
+                    notify: true,
+                    observer: 'setbotonhtml'
+                },
+                cargando: Boolean,
+                botonVisible: Boolean,
+                route: {
+                    type: Object,
+                    notify: true,
+                }
+
+            },
+
+            setbotonhtml: function (newValue, oldValue) {
+                this.$.botonpago.innerHTML = newValue.paymentlink;
+            },
+
+        });
+    </script>
 </dom-module>
