@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
-<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<!--<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">-->
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -82,13 +82,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         Per a reserves de grups escolars, excursionistes, escoltes o désplai, contactau per teléfon: +34
                         656 23 23 63.<br>
                         o al correu: <a href="mailto:reserves@refugisontrias.com ">reserves@refugisontrias.com</a></h3>
-
                     <iron-ajax id="dispo"
                                url="http://viajesibiza.mateu.io/resources/pickupconfirmation/q?"
                                on-response="handledispo"
                                params='{"p":"TIH0000742T"}'
                                handleAs="json"
                                method="GET"></iron-ajax>
+                    <!--params='{"p":"TIH0000742T"}'-->
                     <!--ok http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=TIH0000742T-->
                     <!--No existe aun http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=1493730866128-->
                     <!--No se encuentra http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=estanolaencuentra-->
@@ -141,10 +141,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     notify: true,
                 },
-                nombre: {
+                nombre: String,
+                nombre2: {
                     type: String,
-                    notify: true,
-                    value: ''
+                    value: '{"p":"TIH0000742T"}'
                 },
                 route: {
                     type: Object,
@@ -173,13 +173,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     //this.set('resp', JSON.stringify(this.data))  ;
                     //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
+                    this.nombre = this.data.nombre;
                     this.$.dispo.body = JSON.stringify(this.data);
                     this.$.dispo.generateRequest();
 
                 }
             },
-            _getParams: function () {
-                return ('{"p":"' + this.nombre + '"}');
+            getParams: function () {
+                return ('{"p":"TIH0000742T"}');
             },
 
             handleResponse: function (e, detail) {
