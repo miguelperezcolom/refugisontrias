@@ -77,6 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </vaadin-date-picker>
 
                     <br>
+                    <h1>{{getParams()}}</h1>
                     <br/>
                     <h3>
                         Per a reserves de grups escolars, excursionistes, escoltes o désplai, contactau per teléfon: +34
@@ -87,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                on-response="handledispo"
                                params='{"p":"TIH0000742T"}'
                                handleAs="json"
-                               method="GET"></iron-ajax>
+                               method="GET" verbose="true" lastRequest="{{request}}"></iron-ajax>
                     <!--params='{"p":"TIH0000742T"}'-->
                     <!--ok http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=TIH0000742T-->
                     <!--No existe aun http://viajesibiza.mateu.io/resources/pickupconfirmation/q?p=1493730866128-->
@@ -141,10 +142,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     notify: true,
                 },
-                nombre: String,
-                nombre2: {
+                p: {
                     type: String,
-                    value: '{"p":"TIH0000742T"}'
+                    notify: true,
+                },
+                request: {
+                    type: String,
+                    notify: true,
+                },
+                nombre: {
+                    type: String
                 },
                 route: {
                     type: Object,
@@ -171,16 +178,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             _submit: function (e) {
                 if (this.$.form.validate()) {
 
-                    //this.set('resp', JSON.stringify(this.data))  ;
-                    //this.$.xhr.send({url: 'src/server.jsp', method: 'POST', body: this.data});
-                    this.nombre = this.data.nombre;
-                    this.$.dispo.body = JSON.stringify(this.data);
                     this.$.dispo.generateRequest();
 
                 }
             },
             getParams: function () {
-                return ('{"p":"TIH0000742T"}');
+                return "TIH0000742T";
             },
 
             handleResponse: function (e, detail) {
