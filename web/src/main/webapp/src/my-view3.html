@@ -69,7 +69,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <br>
                     <h3>Ompli les seves dades / Fill your data</h3>
 
-                    <div>{{data.resumen}}</div>
+                    <!--<div>-->
+                    <!--<template is="dom-repeat" items="{{getKeys(data)}}">-->
+                    <!--{{item}}-->
+                    <!--</template>-->
+                    <!--</div>-->
 
 
                     <paper-input class="fuente" name="name" label="Nom / Name *" required value="{{data.nombre}}"
@@ -208,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <table>
                         <tr>
                             <td>Arribada /Check in</td>
-                            <td>27/08/2017</td>
+                            <td>{{data.entrada}}</td>
                         </tr>
                         <tr>
                             <td>Nits / Nights</td>
@@ -216,22 +220,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </tr>
                         <tr>
                             <td>Habitació / Bedroom</td>
-                            <td>Yes</td>
+                            <td>{{data.que}}</td>
                         </tr>
                     </table>
                     <br>
                     <table>
                         <tr>
                             <td>Sortida / Check Out</td>
-                            <td>27/08/2017</td>
+                            <td>{{data.salida}}</td>
                         </tr>
                         <tr>
                             <td>Persones / Guests</td>
-                            <td>2</td>
+                            <td>{{data.pax}}</td>
                         </tr>
                         <tr>
                             <td>Camping</td>
-                            <td>Not</td>
+                            <td>{{data.que}}</td>
                         </tr>
                         <tr>
                             <td>Ecotaxa</td>
@@ -239,11 +243,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </tr>
                     </table>
 
+
                     <paper-spinner alt="Cargando el usuario..." active="[[cargando]]"></paper-spinner>
-
-                    <div class="output">{{resp}}</div>
-
-                    <div class="output">{{mensaje}}</div>
 
 
                     <boton responsive><input type="button" on-click="_submit" value="RESERVAR / BOOKING"></boton>
@@ -286,7 +287,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
             },
-
+            getKeys: function (o) {
+                return Object.keys(o);
+            },
             errorRecibido: function (e, error) {
                 console.log(error.request); //ese es el iron-request de la solicitud
                 this.mensaje = 'Error en la solicitud, con código ' + error.request.status;
