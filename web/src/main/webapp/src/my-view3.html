@@ -216,11 +216,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </tr>
                         <tr>
                             <td>Nits / Nights</td>
-                            <td>2</td>
+                            <td>{{noches}}</td>
                         </tr>
                         <tr>
                             <td>Habitació / Bedroom</td>
-                            <td>{{data.que}}</td>
+                            <td>
+                                <template is="dom-if" if="{{bedroomcheck}}">
+                                    <span>YES</span>
+                                </template>
+                                <template is="dom-if" if="{{!bedroomcheck}}">
+                                    <span>NO</span>
+                                </template>
+                            </td>
                         </tr>
                     </table>
                     <br>
@@ -235,7 +242,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </tr>
                         <tr>
                             <td>Camping</td>
-                            <td>{{data.que}}</td>
+                            <td>
+                                <template is="dom-if" if="{{!bedroomcheck}}">
+                                    <span>YES</span>
+                                </template>
+                                <template is="dom-if" if="{{bedroomcheck}}">
+                                    <span>NO</span>
+                                </template>
+                            </td>
                         </tr>
                         <tr>
                             <td>Ecotaxa</td>
@@ -278,14 +292,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 data: {
                     type: Object,
                     notify: true,
+                    value: {que: 'bedroom', nombre: '', bedroom: true}
                 },
                 cargando: Boolean,
+                bedroomcheck: {
+                    type: Boolean,
+                    notify: true,
+                    value: false
+                },
+                noches: {
+                    type: String,
+                    notify: true,
+                },
                 route: {
                     type: Object,
                     notify: true,
                 },
 
 
+            },
+            ready: function () {
+                var d0 = this.data.entrada;
+                var d1 = this.data.salida;
+                if (d0.hasValue && d1.hasValue) {
+                    console.log("d0=" + d0.value);
+                    console.log("d1=" + d1.value);
+                    this.noches = daysBetween(Date.parse(d0.value), Date.parse(d1.value));
+                    console.log("noches=" + this.noches);
+                }
             },
             getKeys: function (o) {
                 return Object.keys(o);
