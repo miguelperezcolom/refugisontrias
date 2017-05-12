@@ -33,6 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             td, th {
+                width: 50%;
                 border: 1px solid #dddddd;
                 text-align: left;
             }
@@ -75,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <table>
                                 <paper-item disabled="{{!item.enough}}" valor="{{item.day}}" i18n="[[i18n]]">
                                     <tr>
-                                        <td>{{item.day}}</td>
+                                        <td>{{_changeDateFormat(item.day)}}</td>
                                         <td>
                                             <iron-icon icon="icons:{{getIcono(item.enough)}}"
                                                        style="{{getEstilo(item.enough)}}"
@@ -98,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
                 </template>
             </div>
-            <div id="respuesta" class="respuesta">
+            <div id="respuesta" class="respuesta" hidden>
                 <template is="dom-repeat" items="[[detail.xhr]]">
                     <span style="color:#71a83b">{{item.key}}</span>
                     <br><span style="color:black">{{item.value}}</span>
@@ -141,6 +142,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         value: obj[key]
                     };
                 });
+            },
+            _changeDateFormat: function (date) {
+                var da = new Date(date);
+                var weekday = new Array(7);
+                weekday[0] = "Sun";
+                weekday[1] = "Mon";
+                weekday[2] = "Tus";
+                weekday[3] = "Wed";
+                weekday[4] = "Thu";
+                weekday[5] = "Fri";
+                weekday[6] = "Sat";
+
+                var n = weekday[da.getDay()];
+
+                var d = date.slice(0, 10).split('-');
+                return n + ' ' + d[2] + '/' + d[1] + '/' + d[0];
             },
             getIcono: function (ok) {
                 if (ok) return 'check-circle';
