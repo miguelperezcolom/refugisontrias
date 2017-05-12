@@ -18,139 +18,161 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="boton.html">
 
 <dom-module id="my-view2">
-  <template>
-    <style include="shared-styles boton">
-      :host {
-        display: block;
+    <template>
+        <style include="shared-styles boton">
+            :host {
+                display: block;
 
-        padding: 10px;
-      }
-
-      table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-      }
-
-      td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-      }
-
-      tr:nth-child(even) {
-          background-color: #dddddd;
-      }
-    </style>
-
-      <div class="container flex-center-justified">
-          <div class="card">
-
-      <h1>
-          Sol·licitud de reserva<br>
-Booking request
-</h1>
-        <h3>
-No tenim disponibilitat. El nombre de llits disponibles apareix a cada data del llistat, per favor tria una data alternativa i continua amb la reserva.<br>
-We don't have availability on these dates. The number of free beds is in each date in the list, please choose the alternative date for check in and continuous the booking request.</h3>
-
-      <form is="iron-form" id="form" method="post" action="/form/handler">
-      <iron-ajax
-              id="fechas"
-              auto
-              body="{{data}}"
-              url="http://refugibackoffice.mateu.io/servidor/entradas"
-              content-type="application/json"
-              method="POST"
-              on-response="handleResponse"
-              handle-as="json"
-      ></iron-ajax>
-
-
-          <table>
-         <paper-listbox class="dropdown-content" id="gg" name="pax" label="Pax" required selected="{{data.altselected}}" selectedItem="{{data.altentrada}}" attrForSelected="day">
-          <template is="dom-repeat" items="{{items_array}}">
-              <paper-item disabled="{{!item.enough}}" valor="{{item.day}}" i18n="[[i18n]]">
-                  <tr>
-                      <td>{{item.day}}</td>
-                      <td>
-                          <iron-icon icon="icons:{{getIcono(item.enough)}}" style="{{getEstilo(item.enough)}}"
-                                     item-icon></iron-icon>
-                      </td>
-                  </tr>
-              </paper-item>
-          </template>
-        </paper-listbox>
-          </table>
-      <br/>
-
-      </form>
-
-<!--
-      <paper-input name="dedwedwe" label="wedwedew" requiredx value="{{data.altentrada}}"></paper-input>
--->
-      <template  is="dom-if" if="{{data.altselected}}">
-      <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
-      </template>
-    </div>
-          </div>
-  </template>
-
-  <script>
-    Polymer({
-      is: 'my-view2',
-
-        properties: {
-            user: Object,
-            data: {
-                type: Object,
-                notify: true,
-            },
-            page: {
-                type: String,
-                notify: true,
-            },
-            route: {
-                type: Object,
-                notify: true,
-            },
-            i18n: {
-                value: i18n_es
+                padding: 10px;
             }
 
-        },
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-        getIcono: function(ok) {
-          if (ok) return 'check-circle';
-          else return 'close';
-        },
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+            }
 
-        getEstilo: function(ok) {
-            if (ok) return 'color:green;';
-            else return 'color:red;';
-        },
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+        </style>
 
-        _submit: function(e) {
+        <div class="container flex-center-justified">
+            <div class="card">
 
-            console.log(this.page)
-            this.set('data.altcheckin', this.items_array[this.data.altselected].day)  ;
-            this.set('route.path', '/view3');
+                <h1>
+                    Sol·licitud de reserva<br>
+                    Booking request
+                </h1>
+                <h3>
+                    No tenim disponibilitat. El nombre de llits disponibles apareix a cada data del llistat, per favor
+                    tria una data alternativa i continua amb la reserva.<br>
+                    We don't have availability on these dates. The number of free beds is in each date in the list,
+                    please choose the alternative date for check in and continuous the booking request.</h3>
 
-        },
+                <form is="iron-form" id="form" method="post" action="/form/handler">
+                    <iron-ajax
+                            id="fechas"
+                            auto
+                            body="{{data}}"
+                            url="http://refugibackoffice.mateu.io/servidor/entradas"
+                            content-type="application/json"
+                            method="POST"
+                            on-response="handleResponse"
+                            handle-as="json"
+                    ></iron-ajax>
 
-        attributeChanged: function() {
-            this.$.fechas.generateRequest();
-        },
 
-        handleResponse: function(e, detail) {
-            console.log(this.id + " responseHandler fired!\n");
-            this.isBusy = false;
+                    <paper-listbox class="dropdown-content" id="gg" name="pax" label="Pax" required
+                                   selected="{{data.altselected}}" selectedItem="{{data.altentrada}}"
+                                   attrForSelected="day">
+                        <template is="dom-repeat" items="{{items_array}}">
+                            <table>
+                                <paper-item disabled="{{!item.enough}}" valor="{{item.day}}" i18n="[[i18n]]">
+                                    <tr>
+                                        <td>{{item.day}}</td>
+                                        <td>
+                                            <iron-icon icon="icons:{{getIcono(item.enough)}}"
+                                                       style="{{getEstilo(item.enough)}}"
+                                                       item-icon></iron-icon>
+                                        </td>
+                                    </tr>
+                                </paper-item>
+                            </table>
+                        </template>
+                    </paper-listbox>
 
-            var grid = this.$.gg;
+                    <br/>
 
-            this.set('items_array', detail.xhr.response);
-        },
+                </form>
 
-    });
+                <!--
+                      <paper-input name="dedwedwe" label="wedwedew" requiredx value="{{data.altentrada}}"></paper-input>
+                -->
+                <template is="dom-if" if="{{data.altselected}}">
+                    <boton responsive><input type="button" on-click="_submit" value="Continue"></boton>
+                </template>
+            </div>
+            <div id="respuesta" class="respuesta">
+                <template is="dom-repeat" items="[[detail.xhr]]">
+                    <span style="color:#71a83b">{{item.key}}</span>
+                    <br><span style="color:black">{{item.value}}</span>
+                    <br>
+                    <hr>
+                </template>
+                <br> <br> <br>
+            </div>
+        </div>
+    </template>
 
-  </script>
+    <script>
+        Polymer({
+            is: 'my-view2',
+
+            properties: {
+                user: Object,
+                data: {
+                    type: Object,
+                    notify: true,
+                },
+                page: {
+                    type: String,
+                    notify: true,
+                },
+                route: {
+                    type: Object,
+                    notify: true,
+                },
+                i18n: {
+                    value: i18n_es
+                }
+
+            },
+            _toArray: function (obj) {
+                return Object.keys(obj).map(function (key) {
+
+                    return {
+                        key: key,
+                        value: obj[key]
+                    };
+                });
+            },
+            getIcono: function (ok) {
+                if (ok) return 'check-circle';
+                else return 'close';
+            },
+
+            getEstilo: function (ok) {
+                if (ok) return 'color:green;';
+                else return 'color:red;';
+            },
+
+            _submit: function (e) {
+                console.log(this.page)
+                this.set('data.altcheckin', this.items_array[this.data.altselected.day]);
+                this.set('route.path', '/view3');
+
+            },
+
+            attributeChanged: function () {
+                this.$.fechas.generateRequest();
+            },
+
+            handleResponse: function (e, detail) {
+                console.log(this.id + " responseHandler fired!\n");
+                this.isBusy = false;
+                var grid = this.$.gg;
+                console.log(detail.xhr.response);
+                this.set('items_array', detail.xhr.response);
+
+            },
+
+        });
+
+    </script>
 </dom-module>

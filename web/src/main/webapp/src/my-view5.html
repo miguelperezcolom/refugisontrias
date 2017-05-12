@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <link rel="import" href="boton.html">
 
@@ -75,14 +76,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <p>Usuario no existe aun 1493730866128 .</p>
                     <p>Usuario no lo encuentra estanolaencuentra .</p>
                     <br><br>
-                    <paper-button raised onclick="_submit(event)">Search</paper-button>
+                    <paper-button raised onclick="_submit(event)"> Search</paper-button>
+                    <paper-spinner id="spinner" hidden></paper-spinner>
 
                     <!-- uncomment his.querySelector('.outputServer')  in javascript-->
 
                 </form>
             </div>
             <div class="card">
-                <div hidden>
+                <div hidden="[[!debug]]">
                     <h3>Output</h3>
                     <div class="output"></div>
                     <br>
@@ -118,6 +120,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             Polymer({
                 is: 'my-view5',
                 properties: {
+                    debug: {
+                        tyoe: Boolean,
+                        value: false
+                    },
                     username: {
                         type: String,
                         value: ""
@@ -142,20 +148,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 },
                 listeners: {
                     'iron-form-response': 'formResponse',
+                    'iron-form-submit': 'formSubmit',
                     'iron-form-error': 'formError'
                 },
                 _toArray: function (obj) {
                     return Object.keys(obj).map(function (key) {
+
                         return {
                             key: key,
                             value: obj[key]
                         };
                     });
                 },
+                formSubmit: function (event) {
+                    this.$$('#spinner').active = 'true';
+                    this.$$('#spinner').hidden = 'false';
+                    this.$$('.output').innerHTML = JSON.stringify(event.detail);
+                },
 
                 formResponse: function (event, response) {
                     console.log("Event Detail");
                     console.log(response.xhr);
+                    this.$$('#spinner').active = 'false';
+                    this.$$('#spinner').hidden = 'true';
                     if (200 === response.xhr.status) {
                         var datalogin = response.xhr;
                         console.log("RESPONSE");

@@ -100,6 +100,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: Object,
                     notify: true,
                 },
+                n: {
+                    type: String,
+                    notify: true,
+                },
                 today: {
                     //include today date to the attr today
                     value: function () {
@@ -146,6 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 var d0 = this.$.d0;
                 var d1 = this.$.d1;
                 var n = this.$.n;
+                this.n = this.$.n;
                 //		document.querySelector('vaadin-date-picker').set('i18n.firstDayOfWeek', 1);//SET MONDAY FIRST DATE OF WEEK
 
                 d0.addEventListener('value-changed', function () {

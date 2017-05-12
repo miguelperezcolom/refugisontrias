@@ -89,7 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-input name="email" label="Email" required value="{{data.email}}"
                                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address"
                                  auto-validate="true"></paper-input>
-                    <paper-input name="email" label="Repetir / repeat e-mail" required value="{{data.email2}}"
+                    <paper-input name="email" label="Repetir / repeat e-mail" required value="{{data.email}}"
                                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" error="Please only mail address"
                                  auto-validate="true"></paper-input>
                     <!--      <paper-input  name="country" label="País / Country" required value="{{data.pais}}"></paper-input>-->
@@ -279,6 +279,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </form>
             </div>
 
+            <div id="respuesta" class="respuesta" hidden>
+                <template is="dom-repeat" items="[[_toArray(data)]]">
+                    <span style="color:#71a83b">{{item.key}}</span>
+                    <br><span style="color:black">{{item.value}}</span>
+                    <br>
+                    <hr>
+                </template>
+                <br> <br> <br>
+            </div>
 
         </div>
     </template>
@@ -292,7 +301,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 data: {
                     type: Object,
                     notify: true,
-                    value: {que: 'bedroom', nombre: '', bedroom: true}
+                    value: {que: 'bedroom', nombre: '', bedroom: true, entrada: '', salida: ''}
                 },
                 cargando: Boolean,
                 bedroomcheck: {
@@ -308,18 +317,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: Object,
                     notify: true,
                 },
-
+                n: {
+                    type: String,
+                    notify: true,
+                    value: "3"
+                },
+                entrada: {
+                    type: String,
+                    notify: true
+                },
+                salida: {
+                    type: String,
+                    notify: true
+                },
 
             },
+
+            _toArray: function (obj) {
+                return Object.keys(obj).map(function (key) {
+
+                    return {
+                        key: key,
+                        value: obj[key]
+                    };
+                });
+            },
             ready: function () {
-                var d0 = this.data.entrada;
-                var d1 = this.data.salida;
-                if (d0.hasValue && d1.hasValue) {
-                    console.log("d0=" + d0.value);
-                    console.log("d1=" + d1.value);
-                    this.noches = daysBetween(Date.parse(d0.value), Date.parse(d1.value));
-                    console.log("noches=" + this.noches);
-                }
+                console.log("Entrada " + this.data.entrada);
+                console.log("Salida " + this.data.salida);
+                console.log("Tipo " + this.data.que);
+                if (this.data.que == 'bedroom') this.bedroomcheck = true;
+                this.noches = daysBetween(Date.parse(this.data.entrada), Date.parse(this.data.salida));
+                console.log("noches= " + this.noches);
             },
             getKeys: function (o) {
                 return Object.keys(o);
