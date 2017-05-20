@@ -1,0 +1,167 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<link rel="import" href="boton.html">
+
+<dom-module id="my-view6">
+    <template>
+        <style include="shared-styles boton">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            paper-dropdown-menu {
+                width: 98%;
+            }
+
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+
+            .card {
+                width: auto;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+
+
+        <div class="container flex-center-justified">
+
+            <div class="card">
+                <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&amp;showCalendars=0&amp;height=600&amp;wkst=1&amp;hl=en&amp;bgcolor=%23ffffff&amp;src=walterleonardo%40gmail.com&amp;color=%2329527A&amp;ctz=Europe%2FMadrid"
+                        style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+            </div>
+
+        </div>
+
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            var data = {
+                id: '',
+            }
+
+            Polymer({
+                is: 'my-view6',
+                properties: {
+                    debug: {
+                        tyoe: Boolean,
+                        value: false
+                    },
+                    username: {
+                        type: String,
+                        value: ""
+                    },
+                    user: {
+                        type: String,
+                        value: "{{inputData}}"
+                    },
+                    error: {
+                        type: String,
+                        value: "Reservation code is needed!"
+                    },
+                    answer: {
+                        type: Array,
+                        reflectToAttribute: true,
+                        notify: true
+                    },
+                    errorMessage: {
+                        type: String,
+                        notify: true,
+                    },
+                },
+                listeners: {
+                    'iron-form-response': 'formResponse',
+                    'iron-form-submit': 'formSubmit',
+                    'iron-form-error': 'formError'
+                },
+                _toArray: function (obj) {
+                    return Object.keys(obj).map(function (key) {
+
+                        return {
+                            key: key,
+                            value: obj[key]
+                        };
+                    });
+                },
+                formSubmit: function (event) {
+                    this.$$('#spinner').active = 'true';
+                    this.$$('#spinner').hidden = 'false';
+                    this.$$('.output').innerHTML = JSON.stringify(event.detail);
+                },
+
+                formResponse: function (event, response) {
+                    console.log("Event Detail");
+                    console.log(response.xhr);
+                    this.$$('#spinner').active = 'false';
+                    this.$$('#spinner').hidden = 'true';
+                    if (200 === response.xhr.status) {
+                        var datalogin = response.xhr;
+                        console.log("RESPONSE");
+                        console.log(datalogin.response);
+                        this.$$('.outputServer').innerHTML = datalogin.response.message;
+                        if (datalogin.response.result == "ok") {
+                            this.answer = datalogin.response.service;
+                            this.$$('#respuesta').style.display = 'block';
+                            this.errorMessage = [];
+                        } else {
+                            this.answer = [];
+                            this.errorMessage = datalogin.response.message;
+                            this.$$('#respuesta').style.display = 'block';
+                            this.$$('.outputServer').innerHTML = datalogin.response.message;
+                        }
+                    } else {
+                        this.$$('.outputServer').innerHTML = "Mysql ERROR";
+                        app.session = false;
+                    }
+
+                },
+                formError: function (event) {
+                    this.$$('.outputServer').innerHTML = event.detail.error;
+                },
+
+            });
+
+
+        })();
+
+        function _submit(event) {
+            Polymer.dom(event).localTarget.parentElement.submit();
+        }
+    </script>
+</dom-module>
