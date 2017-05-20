@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
-
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -30,25 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             :host {
                 display: block;
                 padding: 10px;
-            }
-
-            paper-dropdown-menu {
-                width: 98%;
-            }
-
-            table {
-                font-family: arial, sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: left;
-            }
-
-            tr:nth-child(even) {
-                background-color: #dddddd;
             }
 
             .card {
@@ -83,32 +63,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         tyoe: Boolean,
                         value: false
                     },
-                    username: {
-                        type: String,
-                        value: ""
-                    },
-                    user: {
-                        type: String,
-                        value: "{{inputData}}"
-                    },
-                    error: {
-                        type: String,
-                        value: "Reservation code is needed!"
-                    },
-                    answer: {
-                        type: Array,
-                        reflectToAttribute: true,
-                        notify: true
-                    },
-                    errorMessage: {
-                        type: String,
-                        notify: true,
-                    },
-                },
-                listeners: {
-                    'iron-form-response': 'formResponse',
-                    'iron-form-submit': 'formSubmit',
-                    'iron-form-error': 'formError'
                 },
                 _toArray: function (obj) {
                     return Object.keys(obj).map(function (key) {
@@ -119,49 +73,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         };
                     });
                 },
-                formSubmit: function (event) {
-                    this.$$('#spinner').active = 'true';
-                    this.$$('#spinner').hidden = 'false';
-                    this.$$('.output').innerHTML = JSON.stringify(event.detail);
-                },
 
-                formResponse: function (event, response) {
-                    console.log("Event Detail");
-                    console.log(response.xhr);
-                    this.$$('#spinner').active = 'false';
-                    this.$$('#spinner').hidden = 'true';
-                    if (200 === response.xhr.status) {
-                        var datalogin = response.xhr;
-                        console.log("RESPONSE");
-                        console.log(datalogin.response);
-                        this.$$('.outputServer').innerHTML = datalogin.response.message;
-                        if (datalogin.response.result == "ok") {
-                            this.answer = datalogin.response.service;
-                            this.$$('#respuesta').style.display = 'block';
-                            this.errorMessage = [];
-                        } else {
-                            this.answer = [];
-                            this.errorMessage = datalogin.response.message;
-                            this.$$('#respuesta').style.display = 'block';
-                            this.$$('.outputServer').innerHTML = datalogin.response.message;
-                        }
-                    } else {
-                        this.$$('.outputServer').innerHTML = "Mysql ERROR";
-                        app.session = false;
-                    }
-
-                },
-                formError: function (event) {
-                    this.$$('.outputServer').innerHTML = event.detail.error;
-                },
 
             });
 
 
         })();
-
-        function _submit(event) {
-            Polymer.dom(event).localTarget.parentElement.submit();
-        }
     </script>
 </dom-module>
