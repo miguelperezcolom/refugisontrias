@@ -91,6 +91,11 @@ public class RSTAtServerSide extends BaseServerSideApp implements ServerSideApp 
     }
 
     @Override
+    public void forgotPassword(String login) throws Throwable {
+
+    }
+
+    @Override
     public void changePassword(String login, String oldPassword, String newPassword) throws Throwable {
         Helper.transact(new JPATransaction() {
             @Override
@@ -116,6 +121,16 @@ public class RSTAtServerSide extends BaseServerSideApp implements ServerSideApp 
                 } else throw new Exception("No user with login " + login);
             }
         });
+    }
+
+    @Override
+    public UserData signUp(String s, String s1, String s2, String s3) throws Throwable {
+        return null;
+    }
+
+    @Override
+    public String recoverPassword(String s) throws Throwable {
+        return null;
     }
 
     @Override

@@ -57,9 +57,15 @@ public class Logic {
                 DecimalFormat df = new DecimalFormat("0.00");
 
                 r.put("ok", hay);
-                r.put("resumen", "Data IN " + entrada + " Data OUT " + salida + " PAX " + uds + " NITS " + noches + " " + m.get("que") + " SI<br/>" +
-                        "Preu PAX/NIT ALLOTJAMENT = " + df.format(totalNoche) + "€<br/>" +
-                        "Preu TOTAL allotjament = " + df.format(total) + "€");
+                r.put("resumen_entrada", entrada);
+                r.put("resumen_salida", salida);
+                r.put("resumen_uds", uds);
+                r.put("resumen_noches", noches);
+                r.put("resumen_que", m.get("que"));
+                r.put("resumen_totalnoche", df.format(totalNoche));
+                r.put("resumen_total", df.format(total));
+                r.put("resumen_ecotasa", 0.5); //todo: coger de appconfig
+
 
             }
         });

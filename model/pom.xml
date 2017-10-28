@@ -119,24 +119,77 @@
 
 
         <dependency>
-            <groupId>io.mateu.sermepa</groupId>
-            <artifactId>api</artifactId>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mateu.erp</groupId>
+            <artifactId>apisha256</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.mateu.sermepa</groupId>
+            <groupId>io.mateu.erp</groupId>
             <artifactId>bcprov</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.mateu.sermepa</groupId>
+            <groupId>io.mateu.erp</groupId>
             <artifactId>codec</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.mateu.sermepa</groupId>
+            <groupId>io.mateu.erp</groupId>
             <artifactId>json</artifactId>
             <version>1.0</version>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.22.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava-jdk5</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+            <version>1.22.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-calendar</artifactId>
+            <version>v3-rev245-1.22.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava-jdk5</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>2.26</version>
         </dependency>
 
 

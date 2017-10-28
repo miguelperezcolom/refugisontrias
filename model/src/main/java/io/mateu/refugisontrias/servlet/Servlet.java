@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by miguel on 1/3/17.
  */
-@WebServlet(urlPatterns = {"/servidor/*"})
+@WebServlet(urlPatterns = {"/servidorparaweb/*"})
 public class Servlet extends HttpServlet {
 
     @Override

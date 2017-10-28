@@ -137,6 +137,48 @@ public class Reserva implements WithTriggers {
     private List<Log> log;
 
 
+    @StartsLine
+    @Output
+    private String refEnBooking;
+
+    @Output
+    private String reservadoPorEnBooking;
+
+    @Output
+    private String nombreClienteEnBooking;
+
+    @Output
+    private String entradaEnBooking;
+
+    @Output
+    private String salidaEnBooking;
+
+    @Output
+    private String bookingDateEnBooking;
+
+    @Output
+    private String estadoEnBooking;
+
+    @Output
+    private String habitacionesEnBooking;
+
+    @Output
+    private String personasEnBooking;
+
+    @Output
+    private String precioEnBooking;
+
+    @Output
+    private String porcentajeComisionEnBooking;
+
+    @Output
+    private String importeComisionEnBooking;
+
+    @Output
+    private String comentariosEnBooking;
+
+
+
     @Override
     public String toString() {
         return "" + getApellidos() + ", " + getNombre() + " - " + getEntrada() + " - " + getLocalizador();
