@@ -185,47 +185,20 @@ public class TPVTransaction {
     public static void main(String[] args) throws Exception {
         System.out.println("-->" + new DecimalFormat("####.00").format(0.1).replaceAll(",", "").replaceAll("\\.", ""));
 
-        /*
-
-        reservas@viajesibiza.es
-inbox@viajesibiza.es
-inboxtest@viajesibiza.es
-
-Y4t3n3m0sXML
-
-        Servidor POP3    mail.invisahoteles.com  puerto 995 con SSL | dejando copia en el servidor
-Servidor SMTP    mail.invisahoteles.com  puerto  25 con TSL o automático
-Para ambos protocolos:
-·         Usuario:  <el propio email>
-·         Clave:    <se enviará en otro email>
-         */
 
         Helper.transact(new JPATransaction() {
             @Override
             public void run(EntityManager entityManager) throws Exception {
 
                 Email email = new HtmlEmail();
-                //email.setHostName("mail.invisahoteles.com");
                 email.setHostName("mateu");
                 email.setSmtpPort(25);
-                //email.setAuthentication("inboxtest@viajesibiza.es", "Y4t3n3m0sXML");
-                //email.setSSLOnConnect(true);
                 email.setFrom("miguel@mateu.io");
-                //email.setFrom("inboxtest@viajesibiza.es");
                 email.setSubject("TestMail");
                 email.setMsg("This is a test mail ... :-)");
                 email.addTo("miguelperezcolom@gmail.com");
                 email.send();
 
-                /*
-                TPVTransaction t = new TPVTransaction();
-                pm.makePersistent(t);
-                t.setTpv(Helper.getById(pm, TPV.class, "227901"));
-                t.setAmount(new Amount(Currency.getByCode(pm, "CZK"), 123.45));
-                t.setLanguage("es");
-                t.setSubject("TEST PAYMENT");
-                Helper.escribirFichero("/Users/miguel/Documents/webpay.html", "<html><body>" + t.getForm() + "</body></html>");
-                */
 
             }
         });
@@ -259,31 +232,6 @@ Para ambos protocolos:
             }
         });
 
-        /*
-        PersistenceManager pm = Helper.getPM(this);
-
-        SendEmailTask t = new SendEmailTask();
-        t.setOwner(getUser());
-        t.setHost(AppConfig.get(pm).getEmailHost());
-        t.setUser(AppConfig.get(pm).getEmailUsuario());
-        t.setPassword(AppConfig.get(pm).getEmailPassword());
-        t.setDescription("CREDIT CARD PAYMENT (" + getTpv().getType() + ") SENT TO " + getEmailTo());
-        t.setCreated(new Date());
-        t.setFrom(getUser().getEmail());
-        t.setTo(getEmailTo());
-        t.setSubject("PAGO TPV");
-        //vu.urlcontent=http://testadmin.busso.io/vuweb/content/
-        //t.setHtml(getEmailHtml().replaceAll("--paymentlink--", (System.getProperty("vu.urlcontent", "http://testadmin.busso.io/vuweb/content/").replaceAll("/vuweb/content/", "")) + "/siar/tpvlanzadera.jsp?idtransaccion=" + Helper.getID(this)));
-        t.setHtml(getEmailHtml().replaceAll("--paymentlink--", getBoton()));
-        t.setEmbedImages(true);
-
-        if (getBasket() != null) {
-            getBasket().getTasks().add(t);
-            getBasket().getTaskList().add(t);
-        }
-
-        pm.makePersistent(t);
-        */
     }
 
 
@@ -441,19 +389,6 @@ Para ambos protocolos:
 
 
     public static void procesarPost(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-//		final StringBuffer jb = new StringBuffer();
-//		  String line = null;
-//		  try {
-//		    BufferedReader reader = request.getReader();
-//		    while ((line = reader.readLine()) != null)
-//		      jb.append(line);
-//		  } catch (Exception e) { /*report an error*/ }
-//
-//		  System.out.println(jb.toString());
-
-
-        //Ds_ErrorCode=SIS0051&Ds_TransactionType=0&Ds_Date=07%2F10%2F2015&Ds_SecurePayment=0&Ds_Order=3274851&Ds_Signature=D95493CF68BB847A98447A5DBD2BB8294DE1F374&Ds_Hour=11%3A58&Ds_Response=0913&Ds_AuthorisationCode=++++++&Ds_Currency=978&Ds_ConsumerLanguage=1&Ds_MerchantCode=266168905&Ds_Amount=10&Ds_Terminal=002
-        //Ds_TransactionType=0&Ds_Card_Country=724&Ds_Date=08%2F10%2F2015&Ds_SecurePayment=1&Ds_Signature=342F34F69DB3A62FA9017F818136CFD6655C4BC8&Ds_Order=3276851&Ds_Hour=07%3A48&Ds_Response=0000&Ds_AuthorisationCode=311629&Ds_Currency=978&Ds_ConsumerLanguage=1&Ds_Card_Type=D&Ds_MerchantCode=266168905&Ds_Amount=10&Ds_Terminal=002
 
         System.out.println("****TPVNOTIFICACION****");
         for (String n : request.getParameterMap().keySet()) {
